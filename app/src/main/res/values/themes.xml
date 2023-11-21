@@ -1,8 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.Kural" parent="Theme.Material3.DayNight">
+    <style name="Base.Theme.Kural" parent="Theme.Material3.Light.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+         <item name="colorPrimary">@color/primary</item>
+         <item name="colorPrimaryDark">@color/primaryDark</item>
     </style>
 
     <style name="Theme.Kural" parent="Base.Theme.Kural" />

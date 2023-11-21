@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.work.OneTimeWorkRequest
@@ -27,14 +28,14 @@ class MainActivity : AppCompatActivity() {
 
         val view = findViewById<View>(R.id.navigation)
         val controller = Navigation.findNavController(view)
-        NavigationUI.setupWithNavController(binding.bottomNav, controller)
-
-        //Changing title in Toolbar
-        val appBarConfiguration = AppBarConfiguration.Builder(
-            R.id.home, R.id.favourite, R.id.setting
-        ).build()
-        NavigationUI.setupActionBarWithNavController(this, controller, appBarConfiguration)
-        scheduleNotificationWork()
+//        NavigationUI.setupWithNavController(binding.bottomNav, controller)
+//
+//        //Changing title in Toolbar
+//        val appBarConfiguration = AppBarConfiguration.Builder(
+//            R.id.home, R.id.favourite, R.id.setting
+//        ).build()
+//        NavigationUI.setupActionBarWithNavController(this, controller, appBarConfiguration)
+//        scheduleNotificationWork()
     }
 
     fun showSearchDialog(view: View?) {

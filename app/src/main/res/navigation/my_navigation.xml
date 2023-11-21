@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_navigation"
+    app:startDestination="@id/home">
+
+    <fragment
+        android:id="@+id/home"
+        android:name="com.w2c.kural.view.fragment.KuralList"
+        android:label="@string/kural_1"
+        tools:layout="@layout/kural_list" />
+    <fragment
+        android:id="@+id/favourite"
+        android:name="com.w2c.kural.view.fragment.Favourite"
+        android:label="@string/favourites"
+        tools:layout="@layout/fragment_favourite" />
+    <fragment
+        android:id="@+id/setting"
+        android:name="com.w2c.kural.view.fragment.Settings"
+        android:label="@string/settings"
+        tools:layout="@layout/fragment_settings" />
+</navigation>

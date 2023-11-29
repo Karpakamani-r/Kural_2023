@@ -44,16 +44,16 @@ object MyNotificationManager {
         notification.setTicker("New notification from Thirukkural")
         notification.setAutoCancel(true)
         notification.setDefaults(Notification.DEFAULT_SOUND)
-        val detailIntent = Intent(context, KuralDetails::class.java)
-        detailIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-        detailIntent.putExtra(IntentKeys.KURAL_NO, kural.number)
-        val pendingIntent = PendingIntent.getActivity(
-            context,
-            0,
-            detailIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-        notification.setContentIntent(pendingIntent)
+//        val detailIntent = Intent(context, KuralDetails::class.java)
+//        detailIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+//        detailIntent.putExtra(IntentKeys.KURAL_NO, kural.number)
+//        val pendingIntent = PendingIntent.getActivity(
+//            context,
+//            0,
+//            detailIntent,
+//            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+//        )
+//        notification.setContentIntent(pendingIntent)
         notificationManager.notify(111, notification.build())
     }
 }

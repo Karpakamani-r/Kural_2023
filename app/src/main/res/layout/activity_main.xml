@@ -8,43 +8,74 @@
         android:layout_height="match_parent"
         tools:context=".view.activity.MainActivity">
 
-        <fragment
-            android:id="@+id/navigation"
-            android:name="androidx.navigation.fragment.NavHostFragment"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:background="@color/primaryDark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/thirukural"
+                android:textColor="@color/white"
+                android:textSize="21sp"
+                android:textStyle="bold" />
+        </androidx.appcompat.widget.Toolbar>
+
+        <ScrollView
+            android:id="@+id/navHostScroll"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:defaultNavHost="true"
-            app:layout_constraintBottom_toTopOf="@+id/bottomNav"
+            app:layout_constraintBottom_toTopOf="@+id/bottomNavCard"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:navGraph="@navigation/my_navigation" />
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/navHostFragment"
+                android:name="androidx.navigation.fragment.NavHostFragment"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:defaultNavHost="true"
+                app:layout_constraintBottom_toTopOf="@+id/bottomNavCard"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar"
+                app:navGraph="@navigation/my_navigation" />
+        </ScrollView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:visibility="gone"
             android:layout_marginBottom="16dp"
             android:onClick="showSearchDialog"
             android:src="@drawable/ic_search"
-            app:layout_constraintBottom_toTopOf="@+id/bottomNav"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/bottomNavCard"
             app:layout_constraintEnd_toEndOf="parent"
             app:tint="@null" />
 
-        <com.ismaeldivita.chipnavigation.ChipNavigationBar
-            android:id="@+id/bottomNav"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/bottomNavCard"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_margin="16dp"
-            app:cnb_animationDuration="175"
-            app:cnb_badgeColor="@color/primaryDark"
-            app:cnb_iconSize="24dp"
-            app:cnb_menuResource="@menu/bottom_navigation_menu"
-            app:cnb_orientationMode="horizontal"
-            app:cnb_radius="8dp"
-            app:cnb_unselectedColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            android:layout_height="wrap_content"
+            app:cardElevation="6dp"
+            app:layout_constraintBottom_toBottomOf="parent">
 
+            <com.ismaeldivita.chipnavigation.ChipNavigationBar
+                android:id="@+id/bottomNav"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                app:cnb_animationDuration="175"
+                app:cnb_badgeColor="@color/white"
+                app:cnb_menuResource="@menu/bottom_navigation_menu"
+                app:cnb_orientationMode="horizontal" />
+        </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

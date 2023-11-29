@@ -8,6 +8,7 @@ import com.w2c.kural.adapter.SettingsAdapter
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.w2c.kural.databinding.FragmentSettingsBinding
+import com.w2c.kural.view.activity.MainActivity
 import java.util.ArrayList
 
 class Settings : Fragment() {
@@ -19,6 +20,12 @@ class Settings : Fragment() {
         settingsBinding = FragmentSettingsBinding.inflate(inflater)
         settingsList
         return settingsBinding!!.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val activity = requireActivity() as MainActivity
+        activity.updateBottomNav(this)
     }
 
     private val settingsList: Unit

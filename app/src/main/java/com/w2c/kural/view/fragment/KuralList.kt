@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +21,7 @@ import com.w2c.kural.datasource.LocalDataSource
 import com.w2c.kural.datasource.RemoteDataSource
 import com.w2c.kural.repository.MainRepository
 import com.w2c.kural.utils.Progress
+import com.w2c.kural.view.activity.MainActivity
 import com.w2c.kural.viewmodel.MainActivityViewModel
 import com.w2c.kural.viewmodel.MainVMFactory
 import kotlinx.coroutines.*
@@ -32,7 +34,7 @@ class KuralList : Fragment() {
     private val mKuralListOriginal: MutableList<Kural> = mutableListOf()
     private var mProgress: Progress? = null
 
-    lateinit var mViewModel: MainActivityViewModel
+    private lateinit var mViewModel: MainActivityViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,41 +45,17 @@ class KuralList : Fragment() {
         return mBinding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        val activity = requireActivity() as MainActivity
+        activity.updateBottomNav(this)
+    }
+
     private fun initView() {
         mBinding = KuralListBinding.inflate(LayoutInflater.from(requireActivity()))
         mProgress = Progress.getInstance(requireActivity())
         mBinding.rvKuralList.layoutManager = LinearLayoutManager(requireActivity())
-        mViewModel = ViewModelProvider(
-            requireActivity(), MainVMFactory(
-                MainRepository(
-                    LocalDataSource(), RemoteDataSource()
-                )
-            )
-        )[MainActivityViewModel::class.java]
-        mBinding.edtSearch.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-                //Needs to be handle, If required.
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                //Needs to be handle, If required.
-            }
-
-            override fun afterTextChanged(s: Editable) {
-                val searchText = s.toString().lowercase(Locale.getDefault())
-                if (!TextUtils.isEmpty(searchText)) {
-                    val filteredList: MutableList<Kural> = mutableListOf()
-                    for (kural in mKuralListOriginal) {
-                        if (mViewModel.isMatchesFound(searchText, kural)) {
-                            filteredList.add(kural)
-                        }
-                    }
-                    updateList(filteredList)
-                } else {
-                    updateList(mKuralListOriginal)
-                }
-            }
-        })
+        mViewModel = ViewModelProvider(requireActivity()).get(MainActivityViewModel::class.java)
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -88,9 +66,8 @@ class KuralList : Fragment() {
     }
 
     private fun getKuralList() {
-        mProgress?.showProgress()
-        lifecycleScope.launch(Dispatchers.Main + getExceptionHandler()) {
-            fetchKurals()
+        lifecycleScope.launch(getExceptionHandler()) {
+            getKural()
         }
     }
 
@@ -104,13 +81,21 @@ class KuralList : Fragment() {
         return handler
     }
 
+    private suspend fun getKural() {
+        val data = mViewModel.kuralCache
+        if (!data.isEmpty()) {
+            setKuralList(data)
+        } else {
+            fetchKurals()
+        }
+    }
+
     private suspend fun fetchKurals() {
+        mProgress?.showProgress()
         mViewModel.getKurals(requireActivity())
             .observe(requireActivity()) { data: List<Kural> ->
-                lifecycleScope.launch(Dispatchers.Main) {
-                    setKuralList(data)
-                    mProgress!!.hideProgress()
-                }
+                setKuralList(data)
+                mProgress?.hideProgress()
             }
     }
 

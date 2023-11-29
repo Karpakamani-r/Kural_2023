@@ -8,9 +8,9 @@
     <string name="kural">குறள்:</string>
     <string name="english_translation">Kural:</string>
     <string name="kural_1">Kural List</string>
-    <string name="kural_no">குறள் எண்: %d</string>
-    <string name="favourites">Favourites</string>
-    <string name="settings">Settings</string>
+    <string name="kural_no">குறள் எண்-%d</string>
+    <string name="favourites">பிடித்தவைகள்</string>
+    <string name="settings">அமைப்புகள்</string>
     <string name="cancel">Cancel</string>
     <string name="submit">Submit</string>
     <string name="enter_kural_number">Enter Kural Number</string>
@@ -19,6 +19,13 @@
     <string name="feedback">Feedback</string>
     <string name="rate_us">Rate us</string>
     <string name="share_app">Share App</string>
-    <string name="search">Search by Tamil/Thanglish</string>
+    <string name="search">குறள் தேடல்</string>
+    <string name="arathuppaal">அறத்துப்பால்</string>
+    <string name="porutpaal">பொருட்பால்</string>
+    <string name="kamathuppaal">காமத்துப்பால்</string>
+    <string name="iyal">இயல்கள்</string>
+    <string name="athikaram">அதிகாரங்கள்</string>
+    <string name="kurals">குறள்கள்</string>
+
 
 </resources>

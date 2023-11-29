@@ -12,6 +12,7 @@ import com.w2c.kural.adapter.KuralAdapter
 import com.w2c.kural.database.DatabaseController
 import com.w2c.kural.database.Kural
 import com.w2c.kural.databinding.FragmentFavouriteBinding
+import com.w2c.kural.view.activity.MainActivity
 import java.util.concurrent.Executors
 
 class Favourite : Fragment() {
@@ -24,6 +25,12 @@ class Favourite : Fragment() {
         binding = FragmentFavouriteBinding.inflate(inflater)
         favFromDB()
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val activity = requireActivity() as MainActivity
+        activity.updateBottomNav(this)
     }
 
     private fun favFromDB() {

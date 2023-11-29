@@ -29,7 +29,8 @@ class KuralAdapter(private val kuralList: MutableList<Kural>) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): KuralViewHolder {
-        val listBinding = ListItemKuralBinding.inflate(LayoutInflater.from(parent.context))
+        val listBinding =
+            ListItemKuralBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return KuralViewHolder(listBinding)
     }
 
@@ -40,43 +41,44 @@ class KuralAdapter(private val kuralList: MutableList<Kural>) :
         val kuralNoTxt = holder.kuralListBinding.root.context.getString(R.string.kural_no)
         holder.kuralListBinding.tvKuralNo.text = String.format(kuralNoTxt, kural.number)
         if (isFromFavourite) {
-            setUpDeleteIcon(holder)
+            //setUpDeleteIcon(holder)
         } else {
-            manageIconForList(holder, kural)
+            //manageIconForList(holder, kural)
         }
     }
+    /*
+        private fun setUpDeleteIcon(holder: KuralViewHolder) {
+            holder.kuralListBinding.ivFav.setImageResource(R.drawable.ic_delete)
+        }
 
-    private fun setUpDeleteIcon(holder: KuralViewHolder) {
-        holder.kuralListBinding.ivFav.setImageResource(R.drawable.ic_delete)
-    }
-
-    private fun manageIconForList(holder: KuralViewHolder, kural: Kural) {
-        //UI update for favourite in Kural list
-        holder.kuralListBinding.ivFav.setImageResource(
-            if (kural.favourite == 0) R.drawable.ic_favorite_border else R.drawable.ic_favorite
-        )
-    }
+        private fun manageIconForList(holder: KuralViewHolder, kural: Kural) {
+            //UI update for favourite in Kural list
+            holder.kuralListBinding.ivFav.setImageResource(
+                if (kural.favourite == 0) R.drawable.ic_favorite_border else R.drawable.ic_favorite
+            )
+        }*/
 
     override fun getItemCount(): Int {
         return kuralList.size
     }
 
-    inner class KuralViewHolder(var kuralListBinding: ListItemKuralBinding) : RecyclerView.ViewHolder(kuralListBinding.root) {
+    inner class KuralViewHolder(var kuralListBinding: ListItemKuralBinding) :
+        RecyclerView.ViewHolder(kuralListBinding.root) {
 
         init {
             kuralListBinding.constraintLayout.setOnClickListener {
-                val context = kuralListBinding.root.context
-                val intent = Intent(context, KuralDetails::class.java)
-                intent.putExtra(IntentKeys.KURAL_NO, kuralList[adapterPosition].number)
-                context.startActivity(intent)
+//                val context = kuralListBinding.root.context
+//                val intent = Intent(context, KuralDetails::class.java)
+//                intent.putExtra(IntentKeys.KURAL_NO, kuralList[adapterPosition].number)
+//                context.startActivity(intent)
             }
-            kuralListBinding.ivFav.setOnClickListener { v: View ->
-                if (isFromFavourite) {
-                    showUnFavAlert(v.context, adapterPosition)
-                } else {
-                    updateFav(v.context, adapterPosition)
-                }
-            }
+            /*kuralListBinding.ivFav.setOnClickListener { v: View ->
+                            if (isFromFavourite) {
+                                showUnFavAlert(v.context, adapterPosition)
+                            } else {
+                                updateFav(v.context, adapterPosition)
+                            }
+                        }*/
         }
 
         private fun updateFav(context: Context, adapterPosition: Int) {

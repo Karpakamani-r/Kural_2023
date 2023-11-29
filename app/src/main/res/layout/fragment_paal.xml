@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <com.google.android.flexbox.FlexboxLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:flexDirection="row"
+        app:flexWrap="wrap"
+        tools:context=".view.fragment.PaalFragment">
+
+        <include
+            android:id="@+id/incLayArathuppaal"
+            layout="@layout/widget_paal"
+            app:athikaram="@{@string/athikaram}"
+            app:iyal="@{@string/iyal}"
+            app:kural="@{@string/kurals}"
+            app:paal="@{@string/arathuppaal}"
+            app:image="@{@drawable/wellness}"/>
+
+        <include
+            android:id="@+id/incLayPorutpaal"
+            layout="@layout/widget_paal"
+            app:athikaram="@{@string/athikaram}"
+            app:iyal="@{@string/iyal}"
+            app:kural="@{@string/kurals}"
+            app:paal="@{@string/porutpaal}"
+            app:image="@{@drawable/treasure}"
+            />
+
+        <include
+            android:id="@+id/incLayKamathuppaal"
+            layout="@layout/widget_paal"
+            app:athikaram="@{@string/athikaram}"
+            app:iyal="@{@string/iyal}"
+            app:kural="@{@string/kurals}"
+            app:paal="@{@string/kamathuppaal}"
+            app:image="@{@drawable/ballons_heart}"
+            />
+
+    </com.google.android.flexbox.FlexboxLayout>
+</layout>

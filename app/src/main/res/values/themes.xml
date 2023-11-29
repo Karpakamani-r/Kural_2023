@@ -2,8 +2,11 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Kural" parent="Theme.Material3.Light.NoActionBar">
         <!-- Customize your light theme here. -->
-         <item name="colorPrimary">@color/primary</item>
-         <item name="colorPrimaryDark">@color/primaryDark</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primaryDark</item>
+        <item name="fontFamily">@font/baloo_thambi_regular</item>
+        <item name="android:fontFamily">@font/baloo_thambi_regular</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="Theme.Kural" parent="Base.Theme.Kural" />

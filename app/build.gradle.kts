@@ -68,6 +68,8 @@ dependencies {
     //Navigation
     implementation("com.github.ismaeldivita:chip-navigation-bar:1.4.0")
 
+    //Flexbox Layout
+    implementation("com.google.android.flexbox:flexbox:3.0.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

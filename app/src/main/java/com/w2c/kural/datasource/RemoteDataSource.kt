@@ -8,7 +8,12 @@ class RemoteDataSource :
     DataSource {
 
     override suspend fun getKuralList(context: Context): List<Kural> {
-        val kuralList = RetrofitClient.instance.getKuralApi().getKural().kural
+        var kuralList: List<Kural>? = null
+        try {
+            kuralList = RetrofitClient.instance.getKuralApi().getKural().kural
+        } catch (e: Exception) {
+            throw Exception(e)
+        }
         return kuralList ?: emptyList()
     }
 

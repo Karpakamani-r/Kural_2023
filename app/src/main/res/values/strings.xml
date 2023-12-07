@@ -23,9 +23,12 @@
     <string name="arathuppaal">அறத்துப்பால்</string>
     <string name="porutpaal">பொருட்பால்</string>
     <string name="kamathuppaal">காமத்துப்பால்</string>
-    <string name="iyal">இயல்கள்</string>
-    <string name="athikaram">அதிகாரங்கள்</string>
+    <string name="iyals">இயல்கள்</string>
+    <string name="iyal">இயல்</string>
+    <string name="athikarams">அதிகாரங்கள்</string>
+    <string name="athikaram">அதிகாரம்</string>
     <string name="kurals">குறள்கள்</string>
-
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

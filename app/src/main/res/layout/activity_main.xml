@@ -66,6 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardElevation="6dp"
+            app:cardBackgroundColor="@color/cardBackgroundColor"
             app:layout_constraintBottom_toBottomOf="parent">
 
             <com.ismaeldivita.chipnavigation.ChipNavigationBar

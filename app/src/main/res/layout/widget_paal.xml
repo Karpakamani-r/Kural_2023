@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -35,6 +36,7 @@
             android:layout_margin="12dp"
             app:cardCornerRadius="6dp"
             app:cardElevation="6dp"
+            app:cardBackgroundColor="@color/cardBackgroundColor"
             app:layout_constraintBottom_toTopOf="@+id/guideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -50,6 +52,7 @@
                     android:layout_height="50dp"
                     android:layout_marginTop="16dp"
                     android:src="@{image}"
+                    tools:src="@drawable/wellness"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -59,7 +62,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@{paal}"
-                    android:textColor="@color/primaryDark"
+                    tools:text="Arathuppaal"
+                    android:textColor="@color/colorIcon"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@+id/guideline3"
@@ -76,6 +80,7 @@
                     android:gravity="center"
                     android:padding="6dp"
                     android:text="@{iyal}"
+                    tools:text="Iyalkal\n4"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/tvAthikaram"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -92,6 +97,7 @@
                     android:gravity="center"
                     android:padding="6dp"
                     android:text="@{athikaram}"
+                    tools:text="Athikarangal\n38"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/tvKurals"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -108,6 +114,7 @@
                     android:gravity="center"
                     android:padding="6dp"
                     android:text="@{kural}"
+                    tools:text="Kuralkal\n380"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/tvAthikaram"

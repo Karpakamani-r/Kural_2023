@@ -7,8 +7,6 @@ import androidx.core.app.NotificationCompat
 import com.w2c.kural.R
 import com.w2c.kural.database.DatabaseController
 import com.w2c.kural.database.Kural
-import com.w2c.kural.utils.IntentKeys
-import com.w2c.kural.view.activity.KuralDetails
 import java.util.*
 import java.util.concurrent.Executors
 

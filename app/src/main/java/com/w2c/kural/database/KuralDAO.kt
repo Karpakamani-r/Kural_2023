@@ -17,14 +17,17 @@ interface KuralDAO {
     fun updateKuralData(kural: Kural)
 
     @get:Query("select * from Kural")
-    val allKural: MutableList<Kural>
+    val allKural: List<Kural>
 
     @Query("select * from Kural where number=:number")
     fun getKural(number: Int): Kural?
 
+    @Query("select * from Kural where number between :startIndex and :endIndex")
+    fun getKuralByRange(startIndex: Int, endIndex: Int): List<Kural>
+
     @get:Query("select * from Kural where favourite=1")
-    val favKuralList: MutableList<Kural>
+    val favKuralList: List<Kural>
 
     @get:Query("select * from Kural where line1=line1")
-    val kuralWord: MutableList<Kural>
+    val kuralWord: List<Kural>
 }

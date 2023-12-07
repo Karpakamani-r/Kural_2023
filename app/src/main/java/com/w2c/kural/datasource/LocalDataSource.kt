@@ -52,4 +52,17 @@ class LocalDataSource : DataSource {
             it.readText()
         }
     }
+
+    suspend fun getKuralsByRange(context: Context, startIndex: Int, endIndex: Int): List<Kural> {
+        return DatabaseController.getInstance(context).kuralDAO.getKuralByRange(
+            startIndex,
+            endIndex
+        )
+    }
+
+    suspend fun updateFavorite(context: Context, kural: Kural){
+        DatabaseController.getInstance(context)
+            .kuralDAO
+            .updateKuralData(kural)
+    }
 }

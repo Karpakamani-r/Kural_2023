@@ -8,22 +8,22 @@
         android:layout_height="match_parent"
         app:flexDirection="row"
         app:flexWrap="wrap"
-        tools:context=".view.fragment.PaalFragment">
+        tools:context=".view.fragment.PaalList">
 
         <include
             android:id="@+id/incLayArathuppaal"
             layout="@layout/widget_paal"
-            app:athikaram="@{@string/athikaram}"
-            app:iyal="@{@string/iyal}"
+            app:athikaram="@{@string/athikarams}"
+            app:iyal="@{@string/iyals}"
             app:kural="@{@string/kurals}"
             app:paal="@{@string/arathuppaal}"
-            app:image="@{@drawable/wellness}"/>
+            app:image="@{@drawable/wellness}" />
 
         <include
             android:id="@+id/incLayPorutpaal"
             layout="@layout/widget_paal"
-            app:athikaram="@{@string/athikaram}"
-            app:iyal="@{@string/iyal}"
+            app:athikaram="@{@string/athikarams}"
+            app:iyal="@{@string/iyals}"
             app:kural="@{@string/kurals}"
             app:paal="@{@string/porutpaal}"
             app:image="@{@drawable/treasure}"
@@ -32,8 +32,8 @@
         <include
             android:id="@+id/incLayKamathuppaal"
             layout="@layout/widget_paal"
-            app:athikaram="@{@string/athikaram}"
-            app:iyal="@{@string/iyal}"
+            app:athikaram="@{@string/athikarams}"
+            app:iyal="@{@string/iyals}"
             app:kural="@{@string/kurals}"
             app:paal="@{@string/kamathuppaal}"
             app:image="@{@drawable/ballons_heart}"

@@ -8,17 +8,47 @@
     <fragment
         android:id="@+id/home"
         android:name="com.w2c.kural.view.fragment.KuralList"
-        android:label="@string/kural_1"
-        tools:layout="@layout/kural_list" />
+        android:label="@string/search"
+        tools:layout="@layout/kural_list" >
+        <argument
+            android:name="paal"
+            android:defaultValue="Arathuppaal" />
+        <argument
+            android:name="screenType"
+            app:argType="com.w2c.kural.utils.ScreenTypes"
+            android:defaultValue="KURALF" />
+        <action
+            android:id="@+id/action_home_to_paalFragment"
+            app:destination="@id/paalFragment"
+            app:popUpTo="@id/paalFragment"
+            app:popUpToInclusive="true" />
+        <argument
+            android:name="athikaram"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="null" />
+        <argument
+            android:name="iyal"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="null" />
+        <action
+            android:id="@+id/action_home_to_kuralDetails"
+            app:destination="@id/kuralDetails" />
+    </fragment>
     <fragment
         android:id="@+id/favourite"
-        android:name="com.w2c.kural.view.fragment.Favourite"
+        android:name="com.w2c.kural.view.fragment.Favourites"
         android:label="@string/favourites"
         tools:layout="@layout/fragment_favourite" >
         <action
-            android:id="@+id/action_favourite_to_home"
-            app:popUpTo="@id/home"
+            android:id="@+id/action_favourite_to_paalFragment"
+            app:destination="@id/paalFragment"
+            app:popUpTo="@id/paalFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_favourite_to_kuralDetails"
+            app:destination="@id/kuralDetails" />
     </fragment>
     <fragment
         android:id="@+id/setting"
@@ -26,13 +56,63 @@
         android:label="@string/settings"
         tools:layout="@layout/fragment_settings" >
         <action
-            android:id="@+id/action_setting_to_home"
-            app:popUpTo="@id/home"
+            android:id="@+id/action_setting_to_paalFragment"
+            app:destination="@id/paalFragment"
+            app:popUpTo="@id/paalFragment"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/paalFragment"
-        android:name="com.w2c.kural.view.fragment.PaalFragment"
-        android:label="fragment_paal"
-        tools:layout="@layout/fragment_paal" />
+        android:name="com.w2c.kural.view.fragment.PaalList"
+        android:label="@string/thirukural"
+        tools:layout="@layout/fragment_paal" >
+        <action
+            android:id="@+id/action_paalFragment_to_athikaramList"
+            app:destination="@id/athikaramList" />
+        <action
+            android:id="@+id/action_paalFragment_to_home"
+            app:destination="@id/home" />
+        <action
+            android:id="@+id/action_paalFragment_to_iyalList"
+            app:destination="@id/iyalList" />
+    </fragment>
+    <fragment
+        android:id="@+id/athikaramList"
+        android:name="com.w2c.kural.view.fragment.AthikaramList"
+        android:label="AthikaramList"
+        tools:layout="@layout/fragment_athikaram_list">
+        <argument
+            android:name="paal"
+            app:argType="string"
+            android:defaultValue="Arathuppaal" />
+        <argument
+            android:name="iyal"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="null" />
+        <action
+            android:id="@+id/action_athikaramList_to_home"
+            app:destination="@id/home" />
+    </fragment>
+    <fragment
+        android:id="@+id/kuralDetails"
+        android:name="com.w2c.kural.view.fragment.KuralDetails"
+        android:label="KuralDetails" >
+        <argument
+            android:name="number"
+            app:argType="integer"
+            android:defaultValue="1" />
+    </fragment>
+    <fragment
+        android:id="@+id/iyalList"
+        android:name="com.w2c.kural.view.fragment.IyalList"
+        android:label="IyalList" >
+        <argument
+            android:name="paal"
+            app:argType="string"
+            android:defaultValue='""' />
+        <action
+            android:id="@+id/action_iyalList_to_athikaramList"
+            app:destination="@id/athikaramList" />
+    </fragment>
 </navigation>

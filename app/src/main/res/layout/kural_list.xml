@@ -14,6 +14,8 @@
             android:background="@drawable/search_box_background"
             android:hint="@string/search"
             android:maxLines="1"
+            android:inputType="text"
+            android:imeOptions="actionDone"
             android:textColor="@color/searchTextColor"
             android:layout_margin="16dp"
             android:paddingStart="55dp"

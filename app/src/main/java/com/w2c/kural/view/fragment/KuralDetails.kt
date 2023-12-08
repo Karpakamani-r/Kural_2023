@@ -13,7 +13,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.w2c.kural.database.DatabaseController
 import com.w2c.kural.database.Kural
-import com.w2c.kural.databinding.ActivityKuralDetailsBinding
 import com.w2c.kural.utils.IntentKeys
 import com.w2c.kural.utils.hide
 import com.w2c.kural.utils.visible
@@ -22,9 +21,10 @@ import com.w2c.kural.viewmodel.MainActivityViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
+import com.w2c.kural.databinding.FragmentKuralDetailsBinding
 
 class KuralDetails : Fragment() {
-    private lateinit var kuralBinding: ActivityKuralDetailsBinding
+    private lateinit var kuralBinding: FragmentKuralDetailsBinding
     private lateinit var viewModel: MainActivityViewModel
 
     override fun onCreateView(
@@ -32,7 +32,7 @@ class KuralDetails : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        kuralBinding = ActivityKuralDetailsBinding.inflate(LayoutInflater.from(requireActivity()))
+        kuralBinding = FragmentKuralDetailsBinding.inflate(LayoutInflater.from(requireActivity()))
         viewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
         updateUI()
         return kuralBinding.root

@@ -7,6 +7,7 @@
         <item name="fontFamily">@font/baloo_thambi_regular</item>
         <item name="android:fontFamily">@font/baloo_thambi_regular</item>
         <item name="android:textColor">@color/black</item>
+        <item name="colorAccent">@color/black</item>
     </style>
 
     <style name="Theme.Kural" parent="Base.Theme.Kural" />

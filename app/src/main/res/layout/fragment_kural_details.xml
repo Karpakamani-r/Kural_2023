@@ -8,12 +8,12 @@
         <variable
             name="kural"
             type="com.w2c.kural.database.Kural" />
+
     </data>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".view.fragment.KuralDetails">
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -24,7 +24,7 @@
                 android:id="@+id/tvKural"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/kural"
+                android:text="@{String.format(@string/kural_no,kural.number)}"
                 android:textColor="@color/primary"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -32,32 +32,20 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tvKuralNo"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:text="@{String.valueOf(kural.number)}"
-                android:textColor="@color/primary"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tvKural"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="1330" />
-
-            <TextView
                 android:id="@+id/tvLine1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
+                android:autoText="false"
                 android:gravity="start"
                 android:maxLines="1"
                 android:text="@{kural.line1}"
-                android:textSize="16sp"
+                android:textSize="14sp"
+                app:autoSizeTextType="uniform"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline4"
                 app:layout_constraintTop_toBottomOf="@+id/tvKural"
-                tools:text="Test Kural Number 1" />
+                tools:text="விண்இன்று பொய்ப்பின் விரிநீர் வியனுலகத்து" />
 
             <TextView
                 android:id="@+id/tvLine2"
@@ -68,24 +56,25 @@
                 android:gravity="start"
                 android:maxLines="1"
                 android:text="@{kural.line2}"
-                android:textSize="16sp"
+                android:textSize="14sp"
+                app:autoSizeTextType="uniform"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline4"
                 app:layout_constraintTop_toBottomOf="@+id/tvLine1"
-                tools:text="Test Kural Number 2" />
+                tools:text="உள்நின்று உடற்றும் பசி." />
 
             <TextView
                 android:id="@+id/tvKural2"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="@string/english_translation"
+                android:text="@{String.format(@string/kural_no_eng,kural.number)}"
                 android:textColor="@color/primary"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline4"
-                app:layout_constraintTop_toBottomOf="@+id/tvLine2" />
+                app:layout_constraintTop_toBottomOf="@+id/tvMK"
+                tools:text="@string/english_translation" />
 
             <TextView
                 android:id="@+id/tvtransliteration1"
@@ -96,11 +85,12 @@
                 android:gravity="start"
                 android:maxLines="1"
                 android:text="@{kural.transliteration1}"
-                android:textSize="16sp"
+                android:textSize="14sp"
+                app:autoSizeTextType="uniform"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline4"
                 app:layout_constraintTop_toBottomOf="@+id/tvKural2"
-                tools:text="Test Kural Number 1" />
+                tools:text="Vinindru Poippin Virineer Viyanulakaththu" />
 
             <TextView
                 android:id="@+id/tvtransliteration2"
@@ -111,24 +101,25 @@
                 android:gravity="start"
                 android:maxLines="1"
                 android:text="@{kural.transliteration2}"
-                android:textSize="16sp"
+                android:textSize="14sp"
+                app:autoSizeTextType="uniform"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline4"
                 app:layout_constraintTop_toBottomOf="@+id/tvtransliteration1"
-                tools:text="Test Kural Number 2" />
+                tools:text="Ulnindru Utatrum Pasi" />
 
             <TextView
                 android:id="@+id/tvMvTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/mv_urai"
                 android:textColor="@color/primary"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline4"
-                app:layout_constraintTop_toBottomOf="@id/tvtransliteration2" />
+                app:layout_constraintTop_toBottomOf="@+id/tvLine2" />
 
             <TextView
                 android:id="@+id/tvMV"
@@ -136,16 +127,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:text="@{kural.mv}"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline4"
-                app:layout_constraintTop_toBottomOf="@id/tvMvTitle" />
+                app:layout_constraintTop_toBottomOf="@id/tvMvTitle"
+                tools:text="மழை பெய்யாமல் பொய்படுமானால், கடல் சூழ்ந்த அகன்ற உலகமாக இருந்தும் பசி உள்ளே நிலைத்து நின்று உயிர்களை வருத்தும்" />
 
             <TextView
                 android:id="@+id/tvSpTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/sp_urai"
                 android:textColor="@color/primary"
                 android:textSize="16sp"
@@ -160,16 +152,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:text="@{kural.sp}"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline4"
-                app:layout_constraintTop_toBottomOf="@+id/tvSpTitle" />
+                app:layout_constraintTop_toBottomOf="@+id/tvSpTitle"
+                tools:text="உரிய காலத்தே மழை பெய்யாது பொய்க்குமானால், கடல் சூழ்ந்த இப்பேருலகத்தில் வாழும் உயிர்களைப் பசி வருத்தும்" />
 
             <TextView
                 android:id="@+id/tvMkTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/mk_urai"
                 android:textColor="@color/primary"
                 android:textSize="16sp"
@@ -184,23 +177,24 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:text="@{kural.mk}"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline4"
-                app:layout_constraintTop_toBottomOf="@+id/tvMkTitle" />
+                app:layout_constraintTop_toBottomOf="@+id/tvMkTitle"
+                tools:text="கடல்நீர் சூழ்ந்த உலகமாயினும், மழைநீர் பொய்த்து விட்டால் பசியின் கொடுமை வாட்டி வதைக்கும்" />
 
             <TextView
                 android:id="@+id/tvexpTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/explanation"
                 android:textColor="@color/primary"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline4"
-                app:layout_constraintTop_toBottomOf="@+id/tvMK" />
+                app:layout_constraintTop_toBottomOf="@+id/tvtransliteration2" />
 
             <TextView
                 android:id="@+id/tvExp"
@@ -208,16 +202,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:text="@{kural.explanation}"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline4"
-                app:layout_constraintTop_toBottomOf="@+id/tvexpTitle" />
+                app:layout_constraintTop_toBottomOf="@+id/tvexpTitle"
+                tools:text="If the cloud, withholding rain, deceive (our hopes) hunger will long distress the sea-girt spacious world" />
 
             <TextView
                 android:id="@+id/tvCuptTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/couplet"
                 android:textColor="@color/primary"
                 android:textSize="16sp"
@@ -232,10 +227,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:text="@{kural.couplet}"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline4"
-                app:layout_constraintTop_toBottomOf="@+id/tvCuptTitle" />
+                app:layout_constraintTop_toBottomOf="@+id/tvCuptTitle"
+                tools:text="If clouds, that promised rain, deceive, and in the sky remain,Famine, sore torment, stalks o'er earth's vast ocean-girdled plain" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline4"

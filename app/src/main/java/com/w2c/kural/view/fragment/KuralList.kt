@@ -74,7 +74,7 @@ class KuralList : Fragment(), OnItemClickListener {
         mBinding.rvKuralList.layoutManager = LinearLayoutManager(requireActivity())
         mViewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
         mBinding.edtSearch.addTextChangedListener {
-            val key = it.toString()
+            val key = it.toString().lowercase()
             if (key.isNotEmpty()) mBinding.ivCancel.visible() else mBinding.ivCancel.hide()
             runnable = Runnable {
                 searchKural(key)
@@ -190,7 +190,7 @@ class KuralList : Fragment(), OnItemClickListener {
     }
 
     override fun onItemClick(position: Int) {
-        val kuralNumber = position + 1
+        val kuralNumber = mKuralList.get(position).number
         val kuralDetailDirection = KuralListDirections.actionHomeToKuralDetails(kuralNumber)
         findNavController().navigate(kuralDetailDirection)
     }

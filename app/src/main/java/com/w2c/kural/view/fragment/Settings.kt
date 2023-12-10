@@ -14,7 +14,12 @@ import com.w2c.kural.adapter.SettingsAdapter
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.work.BackoffPolicy
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
+import androidx.work.PeriodicWorkRequest
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.w2c.kural.databinding.FragmentSettingsBinding
 import com.w2c.kural.notificationwork.NotificationWork
@@ -27,6 +32,8 @@ import java.util.ArrayList
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
+import com.w2c.kural.utils.*
+import com.w2c.kural.R
 
 class Settings : Fragment(), OnItemClickListener {
     private lateinit var settingsBinding: FragmentSettingsBinding
@@ -49,10 +56,10 @@ class Settings : Fragment(), OnItemClickListener {
     private val settingsList: Unit
         get() {
             val list = ArrayList<String>()
-            list.add("Daily notification")
-            list.add("Send Feedback")
-            list.add("Rate us")
-            list.add("Share app")
+            list.add(getString(R.string.daily_one_kural))
+            list.add(getString(R.string.feedback))
+            list.add(getString(R.string.rate_us))
+            list.add(getString(R.string.share_app))
             settingsBinding.rvSettings.layoutManager = LinearLayoutManager(requireActivity())
             adapter = SettingsAdapter(this, list)
             settingsBinding.rvSettings.adapter = adapter
@@ -89,10 +96,10 @@ class Settings : Fragment(), OnItemClickListener {
 
     private fun navigateToMailIntent() {
         val selectorIntent = Intent(Intent.ACTION_SENDTO)
-        selectorIntent.data = Uri.parse("mailto:")
+        selectorIntent.data = Uri.parse(MAIL_TO)
         val emailIntent = Intent(Intent.ACTION_SEND)
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("w2csupport@gmail.com"))
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Thirukkural App Feedback : $todayDate")
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(SUPPORT_MAIL_ID))
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "$APP_FEEDBACK : $todayDate")
         emailIntent.putExtra(Intent.EXTRA_TEXT, "")
         emailIntent.selector = selectorIntent
         try {
@@ -100,7 +107,7 @@ class Settings : Fragment(), OnItemClickListener {
         } catch (e: Exception) {
             Toast.makeText(
                 requireActivity(),
-                "No mail application available in this device, please install mail application and try again..",
+                APP_NOT_FOUND,
                 Toast.LENGTH_SHORT
             ).show()
         }
@@ -109,11 +116,11 @@ class Settings : Fragment(), OnItemClickListener {
     private fun navigateToRateAppIntent() {
         val rateAppIntent = Intent(Intent.ACTION_VIEW)
         try {
-            rateAppIntent.data = Uri.parse("market://details?id=" + requireActivity().packageName)
+            rateAppIntent.data = Uri.parse(MARKET_PATH + requireActivity().packageName)
             startActivity(rateAppIntent)
         } catch (e: ActivityNotFoundException) {
             rateAppIntent.data = Uri.parse(
-                "http://play.google.com/store/apps/details?id" + requireActivity().packageName
+                STORE_PATH + requireActivity().packageName
             )
             startActivity(rateAppIntent)
         }
@@ -121,17 +128,23 @@ class Settings : Fragment(), OnItemClickListener {
 
     private fun navigateToShareAppIntent() {
         val shareAppIntent = Intent(Intent.ACTION_SEND)
-        val url = "http://play.google.com/store/apps/details?id=" + requireActivity().packageName
+        val url = "$STORE_PATH=" + requireActivity().packageName
         shareAppIntent.putExtra(Intent.EXTRA_TEXT, url)
-        shareAppIntent.type = "text/plain"
-        startActivity(Intent.createChooser(shareAppIntent, "Share via"))
+        shareAppIntent.type = PLAIN_TEXT
+        startActivity(Intent.createChooser(shareAppIntent, SHARE_VIA))
     }
 
     fun scheduleNotificationWork() {
         if (NotificationPreference.getInstance(requireActivity()).isDailyNotifyValue) {
-            val notification = OneTimeWorkRequest.Builder(NotificationWork::class.java)
-                .setInitialDelay(15, TimeUnit.HOURS).build()
-            WorkManager.getInstance(requireActivity()).enqueue(notification)
+            val workRequest: PeriodicWorkRequest =
+                PeriodicWorkRequestBuilder<NotificationWork>(1, TimeUnit.DAYS)
+                    .setInitialDelay(15, TimeUnit.MINUTES)
+                    .setBackoffCriteria(BackoffPolicy.LINEAR, 1, TimeUnit.HOURS)
+                    .build()
+            WorkManager.getInstance(requireActivity())
+                .enqueueUniquePeriodicWork(WORK_NAME, ExistingPeriodicWorkPolicy.KEEP, workRequest)
+        } else {
+            WorkManager.getInstance(requireActivity()).cancelUniqueWork(WORK_NAME)
         }
     }
 }

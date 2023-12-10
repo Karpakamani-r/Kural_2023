@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavArgs
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.work.OneTimeWorkRequest
@@ -22,6 +23,7 @@ import com.w2c.kural.datasource.RemoteDataSource
 import com.w2c.kural.notificationwork.NotificationWork
 import com.w2c.kural.repository.MainRepository
 import com.w2c.kural.utils.NotificationPreference
+import com.w2c.kural.utils.ScreenTypes
 import com.w2c.kural.utils.hide
 import com.w2c.kural.utils.visible
 import com.w2c.kural.view.fragment.Favourites
@@ -34,33 +36,28 @@ import com.w2c.kural.viewmodel.MainActivityViewModel
 import com.w2c.kural.viewmodel.MainVMFactory
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
+import androidx.appcompat.widget.Toolbar
+import com.w2c.kural.view.fragment.PaalList
 
 class MainActivity : AppCompatActivity() {
     private lateinit var controller: NavController
     private var lastActionId: Int? = null
     private lateinit var bottomNavigationBar: ChipNavigationBar
-    private lateinit var viewModel: MainActivityViewModel
     private lateinit var binding: ActivityMainBinding
     private var firstTime = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
+        preLoadKural()
+        initView()
+    }
 
+    private fun initView() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
         controller = navHostFragment.navController
-
         bottomNavigationBar = findViewById(R.id.bottomNav)
-
-        viewModel = ViewModelProvider(
-            this, MainVMFactory(
-                this, MainRepository(
-                    LocalDataSource(), RemoteDataSource()
-                )
-            )
-        )[MainActivityViewModel::class.java]
-
         bottomNavigationBar.setOnItemSelectedListener {
             when (it) {
                 R.id.home -> {
@@ -80,9 +77,19 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        preLoadKural()
         attachBackPressCallBack()
-        //scheduleNotificationWork()
+        controller.addOnDestinationChangedListener { _, destination, args ->
+            val title: String? = getTitleFromDestination(destination.id, destination.label, args)
+            binding.title.text = title ?: ""
+        }
+        binding.ivBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
+    }
+
+    private fun getTitleFromDestination(id: Int, label: CharSequence?, args: Bundle?): String? {
+        return when (id) {
+            R.id.iyalList, R.id.athikaramList, R.id.home -> args?.getString("paal")
+            else -> label?.toString()
+        }
     }
 
     private fun attachBackPressCallBack() {
@@ -95,6 +102,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun preLoadKural() {
+        val repo = MainRepository(LocalDataSource(), RemoteDataSource())
+        val viewModel = ViewModelProvider(
+            this,
+            MainVMFactory(context = this, repository = repo)
+        )[MainActivityViewModel::class.java]
         lifecycleScope.launch {
             viewModel.getKurals(this@MainActivity).observe(this@MainActivity) {
                 if (firstTime) {
@@ -118,44 +130,55 @@ class MainActivity : AppCompatActivity() {
             is Settings -> {
                 R.id.setting
             }
+
             is Favourites -> {
                 R.id.favourite
             }
+
             is KuralList -> {
                 R.id.search
             }
-            else -> {
+
+            is PaalList -> {
                 R.id.home
             }
+
+            else -> {
+                0
+            }
         }
-        if (!binding.bottomNavCard.isVisible) {
+
+        //Handling bottom bar visibility
+        val bottomNavNotVisible = !binding.bottomNavCard.isVisible
+        if (bottomNavNotVisible) {
             binding.bottomNavCard.visible()
         }
+
+        //Handling back icon
+        binding.ivBack.hide()
+
+        //Handling bottom bar selection
         bottomNavigationBar.setItemSelected(selectedId, true)
     }
 
-    fun scheduleNotificationWork() {
-        if (NotificationPreference.getInstance(this).isDailyNotifyValue) {
-            val notification = OneTimeWorkRequest.Builder(NotificationWork::class.java)
-                .setInitialDelay(15, TimeUnit.HOURS).build()
-            WorkManager.getInstance(this).enqueue(notification)
-        }
-    }
     fun hideBottomNav() {
         binding.bottomNavCard.hide()
+        //Handling back
+        binding.ivBack.visible()
     }
 
     fun hideToolBar() {
         binding.toolbar.hide()
     }
 
-    fun showToolBar(){
+    fun showToolBar() {
         binding.toolbar.visible()
     }
 
     fun isToolbarGone(): Boolean {
         return binding.toolbar.isGone
     }
+
     private fun onHandleBackClick(callback: OnBackPressedCallback) {
         when (controller.currentDestination?.id) {
             R.id.search -> {
@@ -171,6 +194,10 @@ class MainActivity : AppCompatActivity() {
             R.id.setting -> {
                 val paalList = SettingsDirections.actionSettingToPaalFragment()
                 controller.navigate(paalList)
+            }
+
+            R.id.paalFragment -> {
+                finish()
             }
 
             else -> {

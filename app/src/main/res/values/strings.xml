@@ -1,24 +1,17 @@
 <resources>
-    <string name="app_name">Kural</string>
+    <string name="app_name">திருக்குறள்</string>
     <string name="mv_urai">மு.வரதராசனார் உரை:</string>
     <string name="mk_urai">மு.கருணாநிதி உரை:</string>
     <string name="sp_urai">சாலமன் பாப்பையா உரை:</string>
-    <string name="explanation">Explanation:</string>
-    <string name="couplet">Couplet:</string>
     <string name="kural">குறள்:</string>
-    <string name="english_translation">Kural:</string>
-    <string name="kural_1">Kural List</string>
     <string name="kural_no">குறள் எண்-%d</string>
     <string name="favourites">பிடித்தவைகள்</string>
     <string name="settings">அமைப்புகள்</string>
-    <string name="cancel">Cancel</string>
-    <string name="submit">Submit</string>
-    <string name="enter_kural_number">Enter Kural Number</string>
     <string name="thirukural">திருக்குறள்</string>
-    <string name="daily_one_kural_notification">Daily One Kural Notification</string>
-    <string name="feedback">Feedback</string>
-    <string name="rate_us">Rate us</string>
-    <string name="share_app">Share App</string>
+    <string name="daily_one_kural">தினம் ஒரு குறள்</string>
+    <string name="feedback">மின்னஞ்சல் மூலம் கருத்து அனுப்ப</string>
+    <string name="rate_us">பிளேஸ்டோரில் எங்களை மதிப்பிட</string>
+    <string name="share_app">இந்த செயலியை பகிர</string>
     <string name="search">குறள் தேடல்</string>
     <string name="arathuppaal">அறத்துப்பால்</string>
     <string name="porutpaal">பொருட்பால்</string>
@@ -28,7 +21,10 @@
     <string name="athikarams">அதிகாரங்கள்</string>
     <string name="athikaram">அதிகாரம்</string>
     <string name="kurals">குறள்கள்</string>
-    <string name="kural_no_eng">Kural No-%d</string>
+    <string name="kural_explanation">குறள் விளக்கம்</string>
 
+    <string name="kural_no_eng">Kural No-%d</string>
+    <string name="explanation">Explanation:</string>
+    <string name="couplet">Couplet:</string>
 
 </resources>

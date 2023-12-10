@@ -13,7 +13,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.w2c.kural.database.DatabaseController
 import com.w2c.kural.database.Kural
-import com.w2c.kural.utils.IntentKeys
 import com.w2c.kural.utils.hide
 import com.w2c.kural.utils.visible
 import com.w2c.kural.view.activity.MainActivity

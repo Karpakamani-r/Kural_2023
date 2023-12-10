@@ -31,6 +31,6 @@ data class Kural(
         } else if (TextUtils.isEmpty(line2)) {
             line1
         } else {
-            line1 + line2
+            "$line1\n$line2"
         }
 }

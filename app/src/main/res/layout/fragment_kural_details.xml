@@ -74,7 +74,7 @@
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/guideline4"
                 app:layout_constraintTop_toBottomOf="@+id/tvMK"
-                tools:text="@string/english_translation" />
+                tools:text="@string/kural_no_eng" />
 
             <TextView
                 android:id="@+id/tvtransliteration1"

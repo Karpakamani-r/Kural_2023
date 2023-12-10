@@ -9,14 +9,16 @@
         android:id="@+id/home"
         android:name="com.w2c.kural.view.fragment.KuralList"
         android:label="@string/search"
-        tools:layout="@layout/kural_list" >
+        tools:layout="@layout/kural_list">
         <argument
             android:name="paal"
-            android:defaultValue="Arathuppaal" />
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
         <argument
             android:name="screenType"
-            app:argType="com.w2c.kural.utils.ScreenTypes"
-            android:defaultValue="KURALF" />
+            android:defaultValue="KURALF"
+            app:argType="com.w2c.kural.utils.ScreenTypes" />
         <action
             android:id="@+id/action_home_to_paalFragment"
             app:destination="@id/paalFragment"
@@ -24,14 +26,14 @@
             app:popUpToInclusive="true" />
         <argument
             android:name="athikaram"
+            android:defaultValue="@null"
             app:argType="string"
-            app:nullable="true"
-            android:defaultValue="null" />
+            app:nullable="true" />
         <argument
             android:name="iyal"
+            android:defaultValue="@null"
             app:argType="string"
-            app:nullable="true"
-            android:defaultValue="null" />
+            app:nullable="true" />
         <action
             android:id="@+id/action_home_to_kuralDetails"
             app:destination="@id/kuralDetails" />
@@ -40,7 +42,7 @@
         android:id="@+id/favourite"
         android:name="com.w2c.kural.view.fragment.Favourites"
         android:label="@string/favourites"
-        tools:layout="@layout/fragment_favourite" >
+        tools:layout="@layout/fragment_favourite">
         <action
             android:id="@+id/action_favourite_to_paalFragment"
             app:destination="@id/paalFragment"
@@ -54,7 +56,7 @@
         android:id="@+id/setting"
         android:name="com.w2c.kural.view.fragment.Settings"
         android:label="@string/settings"
-        tools:layout="@layout/fragment_settings" >
+        tools:layout="@layout/fragment_settings">
         <action
             android:id="@+id/action_setting_to_paalFragment"
             app:destination="@id/paalFragment"
@@ -65,7 +67,7 @@
         android:id="@+id/paalFragment"
         android:name="com.w2c.kural.view.fragment.PaalList"
         android:label="@string/thirukural"
-        tools:layout="@layout/fragment_paal" >
+        tools:layout="@layout/fragment_paal">
         <action
             android:id="@+id/action_paalFragment_to_athikaramList"
             app:destination="@id/athikaramList" />
@@ -83,13 +85,13 @@
         tools:layout="@layout/fragment_athikaram_list">
         <argument
             android:name="paal"
-            app:argType="string"
-            android:defaultValue="Arathuppaal" />
+            android:defaultValue="Arathuppaal"
+            app:argType="string" />
         <argument
             android:name="iyal"
+            android:defaultValue="@null"
             app:argType="string"
-            app:nullable="true"
-            android:defaultValue="null" />
+            app:nullable="true" />
         <action
             android:id="@+id/action_athikaramList_to_home"
             app:destination="@id/home" />
@@ -97,20 +99,20 @@
     <fragment
         android:id="@+id/kuralDetails"
         android:name="com.w2c.kural.view.fragment.KuralDetails"
-        android:label="KuralDetails" >
+        android:label="@string/kural_explanation">
         <argument
             android:name="number"
-            app:argType="integer"
-            android:defaultValue="1" />
+            android:defaultValue="1"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/iyalList"
         android:name="com.w2c.kural.view.fragment.IyalList"
-        android:label="IyalList" >
+        android:label="IyalList">
         <argument
             android:name="paal"
-            app:argType="string"
-            android:defaultValue='""' />
+            android:defaultValue='""'
+            app:argType="string" />
         <action
             android:id="@+id/action_iyalList_to_athikaramList"
             app:destination="@id/athikaramList" />

@@ -145,7 +145,7 @@ class KuralList : Fragment(), OnItemClickListener {
     private suspend fun getKural() {
         val data = mViewModel.kuralCache
         if (isFromHomeCard()) {
-            fetchKuralsByRange(getNavArgs().paal, getNavArgs().athikaram)
+            fetchKuralsByRange(getNavArgs().paal!!, getNavArgs().athikaram)
         } else if (data.isNotEmpty()) {
             setKuralList(data)
         } else {
@@ -154,7 +154,7 @@ class KuralList : Fragment(), OnItemClickListener {
     }
 
     private fun isFromHomeCard(): Boolean {
-        return getNavArgs().screenType == ScreenTypes.KURALH && !getNavArgs().paal.isNullOrEmpty()
+        return getNavArgs().screenType == ScreenTypes.KURALH
     }
 
     private fun getNavArgs(): KuralListArgs {

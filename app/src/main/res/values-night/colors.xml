@@ -4,12 +4,15 @@
     <color name="white">#FFFFFFFF</color>
     <color name="primary">#84C9FB</color>
     <color name="primaryDark">#18242B</color>
-    <color name="yellow">#FFF2CE</color>
+    <color name="tv_selection_color">@android:color/transparent</color>
     <color name="grey">#D3D3D3</color>
+    <color name="greyDark">@color/primary</color>
 
     <color name="searchTextColor">@color/primaryDark</color>
     <color name="searchBoxBackgroundColor">#3084C9FB</color>
     <color name="iconColor">@color/primary</color>
     <color name="homeIconColor">@color/primary</color>
     <color name="cardBackgroundColor">@color/primaryDark</color>
+    <color name="settingIconBgColor">@color/primaryDark</color>
+    <color name="bottomNavSelectionColor">#3084C9FB</color>
 </resources>

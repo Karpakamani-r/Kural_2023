@@ -3,6 +3,7 @@ package com.w2c.kural.view.fragment
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +26,7 @@ import com.w2c.kural.databinding.FragmentKuralDetailsBinding
 class KuralDetails : Fragment() {
     private lateinit var kuralBinding: FragmentKuralDetailsBinding
     private lateinit var viewModel: MainActivityViewModel
+    private lateinit var kural: Kural
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,21 +36,32 @@ class KuralDetails : Fragment() {
         kuralBinding = FragmentKuralDetailsBinding.inflate(LayoutInflater.from(requireActivity()))
         viewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
         updateUI()
+        setUpFavoriteClickObserver()
         return kuralBinding.root
     }
 
     private fun updateUI() {
         val args: KuralDetailsArgs by navArgs<KuralDetailsArgs>()
         lifecycleScope.launch(Dispatchers.Main) {
-            viewModel.getKuralDetail(requireActivity(), args.number).observe(requireActivity()) {
-                kuralBinding.kural = it
-            }
+            viewModel.getKuralDetail(requireActivity(), args.number)
+                .observe(viewLifecycleOwner) { it ->
+                    kural = it
+                    kuralBinding.kural = kural
+                    viewModel.updateFavToolBarIcon(kural.favourite == 1)
+                }
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        val activity = requireActivity() as MainActivity
-        activity.hideBottomNav()
+    private fun setUpFavoriteClickObserver() {
+        viewModel.favClickLiveData.observe(viewLifecycleOwner) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                if (::kural.isInitialized) {
+                    kural.apply {
+                        favourite = if (favourite == 0) 1 else 0
+                    }
+                    viewModel.manageFavorite(requireActivity(), kural)
+                }
+            }
+        }
     }
 }

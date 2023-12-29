@@ -1,56 +1,50 @@
 package com.w2c.kural.view.activity
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
-import android.window.OnBackInvokedDispatcher
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
-import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavArgs
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkManager
-import com.ismaeldivita.chipnavigation.ChipNavigationBar
 import com.w2c.kural.R
 import com.w2c.kural.databinding.ActivityMainBinding
 import com.w2c.kural.datasource.LocalDataSource
 import com.w2c.kural.datasource.RemoteDataSource
-import com.w2c.kural.notificationwork.NotificationWork
 import com.w2c.kural.repository.MainRepository
-import com.w2c.kural.utils.NotificationPreference
 import com.w2c.kural.utils.ScreenTypes
 import com.w2c.kural.utils.hide
 import com.w2c.kural.utils.visible
-import com.w2c.kural.view.fragment.Favourites
-import com.w2c.kural.view.fragment.FavouritesDirections
-import com.w2c.kural.view.fragment.KuralList
-import com.w2c.kural.view.fragment.KuralListDirections
-import com.w2c.kural.view.fragment.Settings
-import com.w2c.kural.view.fragment.SettingsDirections
 import com.w2c.kural.viewmodel.MainActivityViewModel
 import com.w2c.kural.viewmodel.MainVMFactory
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
-import androidx.appcompat.widget.Toolbar
-import com.w2c.kural.view.fragment.PaalList
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.w2c.kural.utils.ATHIKARAM
+import com.w2c.kural.utils.IYAL
+import com.w2c.kural.utils.PAAL
 
 class MainActivity : AppCompatActivity() {
     private lateinit var controller: NavController
     private var lastActionId: Int? = null
-    private lateinit var bottomNavigationBar: ChipNavigationBar
+    private lateinit var bottomNavigationBar: BottomNavigationView
     private lateinit var binding: ActivityMainBinding
     private var firstTime = true
+    private val topLevelDestinations = setOf(
+        R.id.paalFragment, R.id.home, R.id.favourite, R.id.setting
+    )
+    private var favorite = false
+    private lateinit var viewModel: MainActivityViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
         preLoadKural()
         initView()
+        setUpFavoriteObserver()
     }
 
     private fun initView() {
@@ -58,52 +52,46 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
         controller = navHostFragment.navController
         bottomNavigationBar = findViewById(R.id.bottomNav)
-        bottomNavigationBar.setOnItemSelectedListener {
-            when (it) {
-                R.id.home -> {
-                    navigate(R.id.paalFragment)
-                }
-
-                R.id.search -> {
-                    navigate(R.id.home)
-                }
-
-                R.id.favourite -> {
-                    navigate(R.id.favourite)
-                }
-
-                R.id.setting -> {
-                    navigate(R.id.setting)
-                }
-            }
-        }
-        attachBackPressCallBack()
         controller.addOnDestinationChangedListener { _, destination, args ->
-            val title: String? = getTitleFromDestination(destination.id, destination.label, args)
+            //Mange Title
+            val title: String? = getTitleFromDestination(destination.label, args)
             binding.title.text = title ?: ""
+            val showTitle =
+                topLevelDestinations.contains(destination.id) && args?.get("screenType") != ScreenTypes.KURALH
+            //Manage BottomBar and Back Button Visibility
+            manageBottomBarAndBackBtn(showTitle)
+            //Manage Favorite Icon in Detail Screen
+            if (destination.id == R.id.kuralDetails) binding.ivFav.visible() else binding.ivFav.hide()
         }
-        binding.ivBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
+        binding.bottomNav.setupWithNavController(controller)
     }
 
-    private fun getTitleFromDestination(id: Int, label: CharSequence?, args: Bundle?): String? {
-        return when (id) {
-            R.id.iyalList, R.id.athikaramList, R.id.home -> args?.getString("paal")
-            else -> label?.toString()
+    fun manageBottomBarAndBackBtn(show: Boolean) {
+        if (show) {
+            binding.ivBack.hide()
+            bottomNavigationBar.visible()
+        } else {
+            binding.ivBack.visible()
+            bottomNavigationBar.hide()
+        }
+        binding.ivBack.setOnClickListener {
+            controller.popBackStack()
         }
     }
 
-    private fun attachBackPressCallBack() {
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                onHandleBackClick(this)
-            }
-        }
-        this@MainActivity.onBackPressedDispatcher.addCallback(this@MainActivity, callback)
+    private fun getTitleFromDestination(label: CharSequence?, args: Bundle?): String? {
+        val athikaram = args?.getString(ATHIKARAM)
+        val iyal = args?.getString(IYAL)
+        val paal = args?.getString(PAAL)
+        return if (!athikaram.isNullOrEmpty()) athikaram
+        else if (!iyal.isNullOrEmpty()) iyal
+        else if (!paal.isNullOrEmpty()) paal
+        else label?.toString()
     }
 
     private fun preLoadKural() {
         val repo = MainRepository(LocalDataSource(), RemoteDataSource())
-        val viewModel = ViewModelProvider(
+        viewModel = ViewModelProvider(
             this,
             MainVMFactory(context = this, repository = repo)
         )[MainActivityViewModel::class.java]
@@ -117,54 +105,22 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigate(action: Int) {
-        val currentId = controller.currentDestination?.id
-        if (action != currentId) {
-            lastActionId = currentId
-            controller.navigate(action)
+    private fun setUpFavoriteObserver() {
+        binding.ivFav.setOnClickListener {
+            favorite = !favorite
+            updateFavIcon()
+            viewModel.onFavClick()
+        }
+
+        viewModel.favUpdateTBIconLiveData.observe(this) {
+            favorite = it
+            updateFavIcon()
         }
     }
 
-    fun updateBottomNav(fragment: Fragment) {
-        val selectedId = when (fragment) {
-            is Settings -> {
-                R.id.setting
-            }
-
-            is Favourites -> {
-                R.id.favourite
-            }
-
-            is KuralList -> {
-                R.id.search
-            }
-
-            is PaalList -> {
-                R.id.home
-            }
-
-            else -> {
-                0
-            }
-        }
-
-        //Handling bottom bar visibility
-        val bottomNavNotVisible = !binding.bottomNavCard.isVisible
-        if (bottomNavNotVisible) {
-            binding.bottomNavCard.visible()
-        }
-
-        //Handling back icon
-        binding.ivBack.hide()
-
-        //Handling bottom bar selection
-        bottomNavigationBar.setItemSelected(selectedId, true)
-    }
-
-    fun hideBottomNav() {
-        binding.bottomNavCard.hide()
-        //Handling back
-        binding.ivBack.visible()
+    private fun updateFavIcon() {
+        val resource = if (favorite) R.drawable.ic_favorite else R.drawable.ic_favorite_border
+        binding.ivFav.setImageResource(resource)
     }
 
     fun hideToolBar() {
@@ -177,33 +133,5 @@ class MainActivity : AppCompatActivity() {
 
     fun isToolbarGone(): Boolean {
         return binding.toolbar.isGone
-    }
-
-    private fun onHandleBackClick(callback: OnBackPressedCallback) {
-        when (controller.currentDestination?.id) {
-            R.id.search -> {
-                val paalList = KuralListDirections.actionHomeToPaalFragment()
-                controller.navigate(paalList)
-            }
-
-            R.id.favourite -> {
-                val paalList = FavouritesDirections.actionFavouriteToPaalFragment()
-                controller.navigate(paalList)
-            }
-
-            R.id.setting -> {
-                val paalList = SettingsDirections.actionSettingToPaalFragment()
-                controller.navigate(paalList)
-            }
-
-            R.id.paalFragment -> {
-                finish()
-            }
-
-            else -> {
-                callback.remove()
-                onBackPressedDispatcher.onBackPressed()
-            }
-        }
     }
 }

@@ -33,8 +33,4 @@ class RemoteDataSource :
         //Since we don't have API to get kural from server,
         //we are leaving this function as Empty.
     }
-
-    companion object {
-        const val TAG = "MainRemoteDataSource"
-    }
 }

@@ -8,6 +8,9 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import com.w2c.kural.R
 import com.w2c.kural.databinding.FragmentPaalBinding
 import com.w2c.kural.utils.ScreenTypes
@@ -16,6 +19,9 @@ import com.w2c.kural.viewmodel.MainActivityViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
+import com.w2c.kural.utils.ATHIKARAM
+import com.w2c.kural.utils.IYAL
+import com.w2c.kural.utils.KURAL
 
 class PaalList : Fragment() {
 
@@ -28,16 +34,17 @@ class PaalList : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentPaalBinding.inflate(LayoutInflater.from(requireActivity()))
         mainActivityViewModel =
-            ViewModelProvider(requireActivity()).get(MainActivityViewModel::class.java)
+            ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
+        setUpAd()
         setUpListeners()
         loadData()
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        val activity = requireActivity() as MainActivity
-        activity.updateBottomNav(this)
+    private fun setUpAd() {
+        MobileAds.initialize(requireActivity())
+        val adRequest = AdRequest.Builder().build()
+        binding.adView.loadAd(adRequest)
     }
 
     private fun setUpListeners() {
@@ -52,7 +59,7 @@ class PaalList : Fragment() {
         }
 
         binding.incLayPorutpaal.tvIyal.setOnClickListener {
-            navigateToIyal( getString(R.string.porutpaal))
+            navigateToIyal(getString(R.string.porutpaal))
         }
         binding.incLayPorutpaal.tvAthikaram.setOnClickListener {
             navigateToAthikaram(getString(R.string.porutpaal))
@@ -73,31 +80,31 @@ class PaalList : Fragment() {
 
     private fun loadData() {
         lifecycleScope.launch {
-        supervisorScope {
-            val arathuppaalAsync = lifecycleScope.async {
-                mainActivityViewModel.getHomeCardData(
-                    requireActivity(),
-                    getString(R.string.arathuppaal)
+            supervisorScope {
+                val arathuppaalAsync = lifecycleScope.async {
+                    mainActivityViewModel.getHomeCardData(
+                        requireActivity(),
+                        getString(R.string.arathuppaal)
+                    )
+                }
+                val porutpaalAsync = lifecycleScope.async {
+                    mainActivityViewModel.getHomeCardData(
+                        requireActivity(),
+                        getString(R.string.porutpaal)
+                    )
+                }
+                val kamathuppaalAsync = lifecycleScope.async {
+                    mainActivityViewModel.getHomeCardData(
+                        requireActivity(),
+                        getString(R.string.kamathuppaal)
+                    )
+                }
+                setUpValues(
+                    arathuppaalAsync.await(),
+                    porutpaalAsync.await(),
+                    kamathuppaalAsync.await()
                 )
             }
-            val porutpaalAsync = lifecycleScope.async {
-                mainActivityViewModel.getHomeCardData(
-                    requireActivity(),
-                    getString(R.string.porutpaal)
-                )
-            }
-            val kamathuppaalAsync = lifecycleScope.async {
-                mainActivityViewModel.getHomeCardData(
-                    requireActivity(),
-                    getString(R.string.kamathuppaal)
-                )
-            }
-            setUpValues(
-                arathuppaalAsync.await(),
-                porutpaalAsync.await(),
-                kamathuppaalAsync.await()
-            )
-        }
         }
     }
 
@@ -106,17 +113,17 @@ class PaalList : Fragment() {
         porutpaal: Map<String, String>,
         kamathuppaal: Map<String, String>
     ) {
-        binding.incLayArathuppaal.tvIyal.text = arathuppaal["Iyal"]
-        binding.incLayArathuppaal.tvAthikaram.text = arathuppaal["Athikaram"]
-        binding.incLayArathuppaal.tvKurals.text = arathuppaal["Kural"]
+        binding.incLayArathuppaal.tvIyal.text = arathuppaal[IYAL]
+        binding.incLayArathuppaal.tvAthikaram.text = arathuppaal[ATHIKARAM]
+        binding.incLayArathuppaal.tvKurals.text = arathuppaal[KURAL]
 
-        binding.incLayPorutpaal.tvIyal.text = porutpaal["Iyal"]
-        binding.incLayPorutpaal.tvAthikaram.text = porutpaal["Athikaram"]
-        binding.incLayPorutpaal.tvKurals.text = porutpaal["Kural"]
+        binding.incLayPorutpaal.tvIyal.text = porutpaal[IYAL]
+        binding.incLayPorutpaal.tvAthikaram.text = porutpaal[ATHIKARAM]
+        binding.incLayPorutpaal.tvKurals.text = porutpaal[KURAL]
 
-        binding.incLayKamathuppaal.tvIyal.text = kamathuppaal["Iyal"]
-        binding.incLayKamathuppaal.tvAthikaram.text = kamathuppaal["Athikaram"]
-        binding.incLayKamathuppaal.tvKurals.text = kamathuppaal["Kural"]
+        binding.incLayKamathuppaal.tvIyal.text = kamathuppaal[IYAL]
+        binding.incLayKamathuppaal.tvAthikaram.text = kamathuppaal[ATHIKARAM]
+        binding.incLayKamathuppaal.tvKurals.text = kamathuppaal[KURAL]
     }
 
     private fun navigateToAthikaram(paal: String) {

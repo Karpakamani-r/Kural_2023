@@ -38,12 +38,6 @@ class AthikaramList : Fragment(), AthikaramClickListener {
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        val mainActivity = requireActivity() as MainActivity
-        mainActivity.hideBottomNav()
-    }
-
     private inline fun loadData() {
         val args: AthikaramListArgs by navArgs()
         loadAthikaram(args.paal, args.iyal, getString(R.string.athikaram))

@@ -21,9 +21,7 @@
             app:argType="com.w2c.kural.utils.ScreenTypes" />
         <action
             android:id="@+id/action_home_to_paalFragment"
-            app:destination="@id/paalFragment"
-            app:popUpTo="@id/paalFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/paalFragment" />
         <argument
             android:name="athikaram"
             android:defaultValue="@null"
@@ -44,11 +42,6 @@
         android:label="@string/favourites"
         tools:layout="@layout/fragment_favourite">
         <action
-            android:id="@+id/action_favourite_to_paalFragment"
-            app:destination="@id/paalFragment"
-            app:popUpTo="@id/paalFragment"
-            app:popUpToInclusive="true" />
-        <action
             android:id="@+id/action_favourite_to_kuralDetails"
             app:destination="@id/kuralDetails" />
     </fragment>
@@ -59,9 +52,7 @@
         tools:layout="@layout/fragment_settings">
         <action
             android:id="@+id/action_setting_to_paalFragment"
-            app:destination="@id/paalFragment"
-            app:popUpTo="@id/paalFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/paalFragment" />
     </fragment>
     <fragment
         android:id="@+id/paalFragment"

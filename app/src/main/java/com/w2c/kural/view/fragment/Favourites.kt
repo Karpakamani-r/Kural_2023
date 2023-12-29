@@ -37,12 +37,6 @@ class Favourites : Fragment(), OnItemClickListener {
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        val activity = requireActivity() as MainActivity
-        activity.updateBottomNav(this)
-    }
-
     private fun fetchFavorites() {
         setupAdapter()
         lifecycleScope.launch(Dispatchers.Main) {
@@ -63,7 +57,7 @@ class Favourites : Fragment(), OnItemClickListener {
     }
 
     override fun onItemClick(position: Int) {
-        val kuralNumber = position + 1
+        val kuralNumber = favourites[position].number
         val kuralDetailDirection = FavouritesDirections.actionFavouriteToKuralDetails(kuralNumber)
         findNavController().navigate(kuralDetailDirection)
     }

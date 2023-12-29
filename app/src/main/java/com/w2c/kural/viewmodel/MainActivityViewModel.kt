@@ -1,36 +1,42 @@
 package com.w2c.kural.viewmodel
 
 import android.content.Context
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.w2c.kural.R
-import com.w2c.kural.database.DatabaseController
 import com.w2c.kural.database.Kural
 import com.w2c.kural.repository.MainRepository
-import com.w2c.kural.utils.Menus
 import com.w2c.kural.utils.ScreenTypes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.*
-import kotlin.collections.AbstractList
+import com.w2c.kural.utils.ATHIKARAM
+import com.w2c.kural.utils.IYAL
+import com.w2c.kural.utils.KURAL
 
 class MainActivityViewModel(private val mainRepository: MainRepository) :
     ViewModel() {
 
     private val kuralCache_: MutableList<Kural> = mutableListOf()
     val kuralCache: List<Kural> = kuralCache_
+
+    private val favClickLiveData_: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    val favClickLiveData = favClickLiveData_
+
+    private val favUpdateTBIconLiveData_: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    val favUpdateTBIconLiveData = favUpdateTBIconLiveData_
+
     private val data: MutableLiveData<List<String>> = MutableLiveData<List<String>>()
+
+    private lateinit var favoriteKural: Kural
     fun cacheKural(list: List<Kural>) {
         kuralCache_.clear()
         kuralCache_.addAll(list)
     }
 
     suspend fun getKurals(
-        context: Context,
-        screenTypes: ScreenTypes? = null,
-        paal: String? = null
+        context: Context
     ): LiveData<List<Kural>> {
         return mainRepository.getKurals(context)
     }
@@ -61,9 +67,9 @@ class MainActivityViewModel(private val mainRepository: MainRepository) :
         val athikaram = "${context.getString(R.string.athikarams)}\n${athikaramList.size}"
         val kurals = "${context.getString(R.string.kurals)}\n${athikaramList.size * 10}"
         //Mapping into hashmap
-        map["Iyal"] = iyal
-        map["Athikaram"] = athikaram
-        map["Kural"] = kurals
+        map[IYAL] = iyal
+        map[ATHIKARAM] = athikaram
+        map[KURAL] = kurals
         return map
     }
 
@@ -75,7 +81,11 @@ class MainActivityViewModel(private val mainRepository: MainRepository) :
         return data
     }
 
-    suspend fun getAthikaramByPaal(context: Context, paal: String, iyal: String?): LiveData<List<String>> {
+    suspend fun getAthikaramByPaal(
+        context: Context,
+        paal: String,
+        iyal: String?
+    ): LiveData<List<String>> {
         val athikaram = mainRepository.getAthikaramByPaal(context, paal, iyal)
         data.value = athikaram
         return data
@@ -100,15 +110,26 @@ class MainActivityViewModel(private val mainRepository: MainRepository) :
         return kuralList
     }
 
-    suspend fun getFavoriteKurals(context: Context): LiveData<List<Kural>>{
+    suspend fun getFavoriteKurals(context: Context): LiveData<List<Kural>> {
         return mainRepository.getFavorites(context)
     }
-    suspend fun manageFavorite(context: Context, kural: Kural){
+
+    suspend fun manageFavorite(context: Context, kural: Kural) {
         mainRepository.updateFavorite(context, kural)
     }
-    suspend fun getKuralDetail(context: Context, number: Int):LiveData<Kural> {
+
+    fun onFavClick() {
+        favClickLiveData_.value = true
+    }
+
+    fun updateFavToolBarIcon(visible: Boolean) {
+        favUpdateTBIconLiveData_.value = visible
+    }
+
+    suspend fun getKuralDetail(context: Context, number: Int): LiveData<Kural> {
         return mainRepository.getKuralDetail(context, number)
     }
+
     fun isMatchesFound(searchText: String, kural: Kural?): Boolean {
         return matchTranslation(searchText, kural) || matchTamilTranslation(searchText, kural) ||
                 matchMk(searchText, kural) || matchMv(searchText, kural) ||

@@ -34,6 +34,7 @@ import java.util.Locale
 import java.util.concurrent.TimeUnit
 import com.w2c.kural.utils.*
 import com.w2c.kural.R
+import com.w2c.kural.model.Setting
 
 class Settings : Fragment(), OnItemClickListener {
     private lateinit var settingsBinding: FragmentSettingsBinding
@@ -47,19 +48,34 @@ class Settings : Fragment(), OnItemClickListener {
         return settingsBinding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        val activity = requireActivity() as MainActivity
-        activity.updateBottomNav(this)
-    }
-
     private val settingsList: Unit
         get() {
-            val list = ArrayList<String>()
-            list.add(getString(R.string.daily_one_kural))
-            list.add(getString(R.string.feedback))
-            list.add(getString(R.string.rate_us))
-            list.add(getString(R.string.share_app))
+            val list = ArrayList<Setting>()
+
+            val dailyNotify = Setting(
+                getString(R.string.daily_one_kural),
+                listOf<Int>(R.drawable.ic_bell_enable, R.drawable.ic_bell_disable)
+            )
+            list.add(dailyNotify)
+
+            val feedBack = Setting(
+                getString(R.string.feedback),
+                listOf<Int>(R.drawable.ic_email)
+            )
+            list.add(feedBack)
+
+            val rateUs = Setting(
+                getString(R.string.rate_us),
+                listOf<Int>(R.drawable.ic_rate)
+            )
+            list.add(rateUs)
+
+            val shareApp = Setting(
+                getString(R.string.share_app),
+                listOf<Int>(R.drawable.ic_share)
+            )
+            list.add(shareApp)
+
             settingsBinding.rvSettings.layoutManager = LinearLayoutManager(requireActivity())
             adapter = SettingsAdapter(this, list)
             settingsBinding.rvSettings.adapter = adapter

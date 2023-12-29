@@ -9,7 +9,6 @@ class NotificationWork(private val context: Context, workerParams: WorkerParamet
     context, workerParams
 ) {
     override fun doWork(): Result {
-        Log.d("NotificationWork", "Work is executing")
         MyNotificationManager.displayNotification(context)
         return Result.success()
     }

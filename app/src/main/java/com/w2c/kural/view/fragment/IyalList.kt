@@ -40,11 +40,6 @@ class IyalList : Fragment(), AthikaramClickListener {
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        val mainActivity = requireActivity() as MainActivity
-        mainActivity.hideBottomNav()
-    }
     private inline fun loadData() {
         val args: AthikaramListArgs by navArgs()
         loadIyal(args.paal, getString(R.string.iyal))

@@ -13,6 +13,7 @@
     <string name="rate_us">பிளேஸ்டோரில் எங்களை மதிப்பிட</string>
     <string name="share_app">இந்த செயலியை பகிர</string>
     <string name="search">குறள் தேடல்</string>
+    <string name="search_hint">குறள் எண்/வார்த்தை</string>
     <string name="arathuppaal">அறத்துப்பால்</string>
     <string name="porutpaal">பொருட்பால்</string>
     <string name="kamathuppaal">காமத்துப்பால்</string>
@@ -26,5 +27,7 @@
     <string name="kural_no_eng">Kural No-%d</string>
     <string name="explanation">Explanation:</string>
     <string name="couplet">Couplet:</string>
+    <!--Kural Not Found, Please search with valid word or number-->
+    <string name="kural_not_found">குறள் கிடைக்கவில்லை, சரியான வார்த்தை அல்லது எண்ணைக் கொண்டு தேடவும்</string>
 
 </resources>

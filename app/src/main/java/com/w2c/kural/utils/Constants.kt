@@ -1,5 +1,6 @@
 package com.w2c.kural.utils
 
+/*SETTINGS PROPERTIES*/
 val MAIL_TO = "mailto:"
 val SUPPORT_MAIL_ID = "w2csupport@gmail.com"
 val APP_FEEDBACK = "Thirukkural App Feedback"
@@ -10,3 +11,16 @@ val STORE_PATH = "http://play.google.com/store/apps/details?id"
 val PLAIN_TEXT = "text/plain"
 val SHARE_VIA = "Share via"
 val WORK_NAME = "kural-work"
+
+/*DB PROPERTIES*/
+val DB_VERSION = 1
+
+/*NETWORK PROPERTIES*/
+val TO_SEC = 4L
+val BASE_URL = "https://firebasestorage.googleapis.com/v0/b/valid-complex-136508.appspot.com/o/"
+
+/*BUNDLE PROPERTIES*/
+val ATHIKARAM="athikaram"
+val IYAL="iyal"
+val PAAL="paal"
+val KURAL="kural"

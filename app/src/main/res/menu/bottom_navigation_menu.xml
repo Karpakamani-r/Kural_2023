@@ -2,23 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/home"
-        android:icon="@drawable/ic_home"
-        android:title="@string/thirukural"
-        app:cnb_iconColor="@color/homeIconColor" />
+        android:id="@+id/paalFragment"
+        android:icon="@drawable/ic_home" />
     <item
-        android:id="@+id/search"
-        android:icon="@drawable/ic_search"
-        android:title="@string/search"
-        app:cnb_iconColor="@color/homeIconColor" />
+        android:id="@+id/home"
+        android:icon="@drawable/ic_search" />
     <item
         android:id="@+id/favourite"
-        android:icon="@drawable/ic_favorites"
-        android:title="@string/favourites"
-        app:cnb_iconColor="@color/homeIconColor" />
+        android:icon="@drawable/ic_favorites" />
     <item
         android:id="@+id/setting"
-        android:icon="@drawable/ic_settings"
-        android:title="@string/settings"
-        app:cnb_iconColor="@color/homeIconColor" />
+        android:icon="@drawable/ic_settings" />
 </menu>

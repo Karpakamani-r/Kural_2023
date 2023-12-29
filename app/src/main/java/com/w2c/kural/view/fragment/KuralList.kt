@@ -24,19 +24,18 @@ import com.w2c.kural.utils.hide
 import com.w2c.kural.utils.visible
 import com.w2c.kural.utils.OnItemClickListener
 
-import com.w2c.kural.view.activity.MainActivity
 import com.w2c.kural.viewmodel.MainActivityViewModel
 import kotlinx.coroutines.*
 import com.w2c.kural.R
 
 class KuralList : Fragment(), OnItemClickListener {
-    private lateinit var mBinding: KuralListBinding
+    private lateinit var binding: KuralListBinding
     private var kuralAdapter: KuralAdapter? = null
     private var mKuralList: MutableList<Kural> = mutableListOf()
     private val mKuralListOriginal: MutableList<Kural> = mutableListOf()
     private var mProgress: Progress? = null
 
-    private lateinit var mViewModel: MainActivityViewModel
+    private lateinit var viewModel: MainActivityViewModel
     private var handler = Handler()
     private lateinit var runnable: Runnable
     override fun onCreateView(
@@ -45,7 +44,7 @@ class KuralList : Fragment(), OnItemClickListener {
     ): View {
         initView()
         getKuralList()
-        return mBinding.root
+        return binding.root
     }
 
     override fun onResume() {
@@ -54,49 +53,55 @@ class KuralList : Fragment(), OnItemClickListener {
     }
 
     private fun manageUI() {
-        val activity = requireActivity() as MainActivity
         if (isFromHomeCard()) {
-            activity.hideBottomNav()
-            activity.showToolBar()
-            mBinding.edtSearch.hide()
-            mBinding.ivSearch.hide()
+            binding.edtSearch.hide()
+            binding.ivSearch.hide()
         } else {
-            activity.hideToolBar()
-            mBinding.edtSearch.visible()
-            mBinding.ivSearch.visible()
-            activity.updateBottomNav(this)
+            binding.edtSearch.visible()
+            binding.ivSearch.visible()
         }
     }
 
     private fun initView() {
-        mBinding = KuralListBinding.inflate(LayoutInflater.from(requireActivity()))
+        binding = KuralListBinding.inflate(LayoutInflater.from(requireActivity()))
         mProgress = Progress.getInstance(requireActivity())
-        mBinding.rvKuralList.layoutManager = LinearLayoutManager(requireActivity())
-        mViewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
-        mBinding.edtSearch.addTextChangedListener {
-            val key = it.toString().lowercase()
-            if (key.isNotEmpty()) mBinding.ivCancel.visible() else mBinding.ivCancel.hide()
+        binding.rvKuralList.layoutManager = LinearLayoutManager(requireActivity())
+        viewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
+        binding.edtSearch.addTextChangedListener {
+            val key = it.toString().lowercase().trimStart().trimEnd()
+            manageCancelView(key)
             runnable = Runnable {
                 searchKural(key)
             }
             handler.postDelayed(runnable, 1000)
         }
-        mBinding.ivCancel.setOnClickListener {
-            mBinding.edtSearch.setText("")
+        binding.ivCancel.setOnClickListener {
+            binding.edtSearch.setText("")
+            mKuralList.addAll(mKuralListOriginal)
+            kuralAdapter?.notifyDataSetChanged()
+            binding.tvNotFound.hide()
         }
         setUpSwipeInRecyclerView()
     }
 
-    private fun setUpSwipeInRecyclerView(){
-        val itemTouchHelper = ItemTouchHelper(object : SwipeHelper(mBinding.rvKuralList) {
+    private fun manageCancelView(key: String) {
+        if (key.isNotEmpty()) {
+            binding.ivCancel.visible()
+        } else {
+            binding.ivCancel.hide()
+        }
+    }
+
+    private fun setUpSwipeInRecyclerView() {
+        val itemTouchHelper = ItemTouchHelper(object : SwipeHelper(binding.rvKuralList) {
             override fun instantiateUnderlayButton(position: Int): List<UnderlayButton> {
                 return listOf(favoriteButton(position))
             }
         })
-        itemTouchHelper.attachToRecyclerView(mBinding.rvKuralList)
+        itemTouchHelper.attachToRecyclerView(binding.rvKuralList)
     }
 
-    private fun favoriteButton(position: Int) : SwipeHelper.UnderlayButton {
+    private fun favoriteButton(position: Int): SwipeHelper.UnderlayButton {
         return SwipeHelper.UnderlayButton(
             requireActivity(),
             if (mKuralList[position].favourite == 0) "Mark as Favorite" else "Mark as Unfavorite",
@@ -105,9 +110,10 @@ class KuralList : Fragment(), OnItemClickListener {
             object : SwipeHelper.UnderlayButtonClickListener {
                 override fun onClick() {
                     lifecycleScope.launch(Dispatchers.Main) {
-                        val kural = mKuralList[position]
-                        kural.favourite = if (kural.favourite == 0) 1 else 0
-                        mViewModel.manageFavorite(requireActivity(), kural)
+                        val kural = mKuralList[position].apply {
+                            favourite = if (favourite == 0) 1 else 0
+                        }
+                        viewModel.manageFavorite(requireActivity(), kural)
                     }
                 }
             })
@@ -115,12 +121,13 @@ class KuralList : Fragment(), OnItemClickListener {
 
     private fun searchKural(searchKey: String) {
         lifecycleScope.launch(Dispatchers.Main) {
-            val filteredKurals = mViewModel.filterKuralBySearch(searchKey)
+            val filteredKurals = viewModel.filterKuralBySearch(searchKey)
             mKuralList.clear()
             if (filteredKurals.isNotEmpty()) {
                 mKuralList.addAll(filteredKurals)
+                binding.tvNotFound.hide()
             } else {
-                mKuralList.addAll(mKuralListOriginal)
+                binding.tvNotFound.visible()
             }
             kuralAdapter?.notifyDataSetChanged()
         }
@@ -143,7 +150,7 @@ class KuralList : Fragment(), OnItemClickListener {
     }
 
     private suspend fun getKural() {
-        val data = mViewModel.kuralCache
+        val data = viewModel.kuralCache
         if (isFromHomeCard()) {
             fetchKuralsByRange(getNavArgs().paal!!, getNavArgs().athikaram)
         } else if (data.isNotEmpty()) {
@@ -164,7 +171,7 @@ class KuralList : Fragment(), OnItemClickListener {
 
     private suspend fun fetchKuralsByRange(paal: String, athikaram: String?) {
         mProgress?.showProgress()
-        mViewModel.getKuralsByRange(requireActivity(), paal, athikaram)
+        viewModel.getKuralsByRange(requireActivity(), paal, athikaram)
             .observe(requireActivity()) { data: List<Kural> ->
                 setKuralList(data)
                 mProgress?.hideProgress()
@@ -173,7 +180,7 @@ class KuralList : Fragment(), OnItemClickListener {
 
     private suspend fun fetchKurals() {
         mProgress?.showProgress()
-        mViewModel.getKurals(requireActivity())
+        viewModel.getKurals(requireActivity())
             .observe(requireActivity()) { data: List<Kural> ->
                 setKuralList(data)
                 mProgress?.hideProgress()
@@ -186,21 +193,13 @@ class KuralList : Fragment(), OnItemClickListener {
         mKuralList.clear()
         mKuralList.addAll(data)
         kuralAdapter = KuralAdapter(mKuralList, this)
-        mBinding.rvKuralList.adapter = kuralAdapter
+        binding.rvKuralList.adapter = kuralAdapter
     }
 
     override fun onItemClick(position: Int) {
         val kuralNumber = mKuralList.get(position).number
         val kuralDetailDirection = KuralListDirections.actionHomeToKuralDetails(kuralNumber)
         findNavController().navigate(kuralDetailDirection)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        val activity = requireActivity() as MainActivity
-        if (activity.isToolbarGone()) {
-            activity.showToolBar()
-        }
     }
 
     override fun onDestroy() {

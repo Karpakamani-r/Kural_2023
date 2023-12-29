@@ -11,4 +11,8 @@
     </style>
 
     <style name="Theme.Kural" parent="Base.Theme.Kural" />
+
+    <style name="Theme.BottomNavigationView.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/bottomNavSelectionColor</item>
+    </style>
 </resources>

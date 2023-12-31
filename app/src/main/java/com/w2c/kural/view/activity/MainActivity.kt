@@ -1,10 +1,11 @@
 package com.w2c.kural.view.activity
 
+import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isGone
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -25,6 +26,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.w2c.kural.utils.ATHIKARAM
 import com.w2c.kural.utils.IYAL
 import com.w2c.kural.utils.PAAL
+import com.w2c.kural.utils.NOTIFICATION_REQ_CODE
 
 class MainActivity : AppCompatActivity() {
     private lateinit var controller: NavController
@@ -45,6 +47,7 @@ class MainActivity : AppCompatActivity() {
         preLoadKural()
         initView()
         setUpFavoriteObserver()
+        checkNotificationPermission()
     }
 
     private fun initView() {
@@ -66,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNav.setupWithNavController(controller)
     }
 
-    fun manageBottomBarAndBackBtn(show: Boolean) {
+    private fun manageBottomBarAndBackBtn(show: Boolean) {
         if (show) {
             binding.ivBack.hide()
             bottomNavigationBar.visible()
@@ -123,15 +126,31 @@ class MainActivity : AppCompatActivity() {
         binding.ivFav.setImageResource(resource)
     }
 
-    fun hideToolBar() {
-        binding.toolbar.hide()
+    private fun checkNotificationPermission() {
+        if (shouldShowRequestPermissionRationale("Manifest.permission.POST_NOTIFICATIONS")) {
+
+        } else if (ContextCompat.checkSelfPermission(
+                this@MainActivity, "Manifest.permission.POST_NOTIFICATIONS"
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this@MainActivity,
+                arrayOf("Manifest.permission.POST_NOTIFICATIONS"),
+                NOTIFICATION_REQ_CODE
+            )
+        }
     }
 
-    fun showToolBar() {
-        binding.toolbar.visible()
-    }
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == NOTIFICATION_REQ_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-    fun isToolbarGone(): Boolean {
-        return binding.toolbar.isGone
+            }
+        }
     }
 }

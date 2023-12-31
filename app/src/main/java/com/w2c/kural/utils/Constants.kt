@@ -20,7 +20,10 @@ val TO_SEC = 4L
 val BASE_URL = "https://firebasestorage.googleapis.com/v0/b/valid-complex-136508.appspot.com/o/"
 
 /*BUNDLE PROPERTIES*/
-val ATHIKARAM="athikaram"
-val IYAL="iyal"
-val PAAL="paal"
-val KURAL="kural"
+val ATHIKARAM = "athikaram"
+val IYAL = "iyal"
+val PAAL = "paal"
+val KURAL = "kural"
+
+/*PERMISSION PROPERTIES*/
+val NOTIFICATION_REQ_CODE = 1010

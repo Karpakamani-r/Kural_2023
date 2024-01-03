@@ -26,6 +26,7 @@ val ATHIKARAM = "athikaram"
 val IYAL = "iyal"
 val PAAL = "paal"
 val KURAL = "kural"
+val NUMBER = "number"
 
 /*PERMISSION PROPERTIES*/
 val NOTIFICATION_REQ_CODE = 1010

@@ -25,8 +25,11 @@
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:layout_gravity="end"
-            android:scaleType="center"
             android:background="@color/green"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+            android:scaleType="center"
             android:src="@{kural.favourite == 0 ? @drawable/ic_add_favorite : @drawable/ic_remove_favorite}" />
 
         <androidx.constraintlayout.widget.ConstraintLayout

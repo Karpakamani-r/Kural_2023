@@ -6,7 +6,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/kuralListItemBgColor">
 
         <EditText
             android:id="@+id/edtSearch"
@@ -40,7 +41,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvKuralList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:paddingTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -63,8 +64,8 @@
             android:id="@+id/tvNotFound"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_margin="16dp"
+            android:gravity="center"
             android:padding="10dp"
             android:text="@string/kural_not_found"
             android:textSize="14sp"

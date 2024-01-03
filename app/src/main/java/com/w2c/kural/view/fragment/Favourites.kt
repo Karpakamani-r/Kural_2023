@@ -13,9 +13,12 @@ import com.w2c.kural.adapter.KuralAdapter
 import com.w2c.kural.database.Kural
 import com.w2c.kural.databinding.FragmentFavouriteBinding
 import com.w2c.kural.utils.OnItemClickListener
+import com.w2c.kural.utils.hide
+import com.w2c.kural.utils.visible
 import com.w2c.kural.viewmodel.MainActivityViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import com.w2c.kural.R
 
 class Favourites : Fragment(), OnItemClickListener {
     private lateinit var binding: FragmentFavouriteBinding
@@ -40,7 +43,18 @@ class Favourites : Fragment(), OnItemClickListener {
                 if (favourites.isNotEmpty()) favourites.clear()
                 favourites.addAll(it)
                 favAdapter?.notifyDataSetChanged()
+                manageKuralEmptyView(favourites.isEmpty())
             }
+        }
+    }
+
+    private fun manageKuralEmptyView(empty: Boolean) {
+        if (empty) {
+            binding.tvNoFavorites.visible()
+            binding.rvFavourite.hide()
+        } else {
+            binding.rvFavourite.visible()
+            binding.tvNoFavorites.hide()
         }
     }
 
@@ -63,7 +77,7 @@ class Favourites : Fragment(), OnItemClickListener {
                 favourite = 0
             }
             favAdapter?.notifyItemChanged(position, kural)
-            val statusCode = viewModel.manageFavorite(requireActivity(), kural)
+            viewModel.manageFavorite(requireActivity(), kural)
         }
     }
 }

@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "951534070369",
-    "project_id": "valid-complex-136508",
-    "storage_bucket": "valid-complex-136508.appspot.com"
+    "project_number": "698788858835",
+    "project_id": "thirukkural-5f267",
+    "storage_bucket": "thirukkural-5f267.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:951534070369:android:50ae231f470decd3199820",
+        "mobilesdk_app_id": "1:698788858835:android:0d561d9335fa56a0187d26",
         "android_client_info": {
           "package_name": "com.w2c.kural"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDV3U71xCXoJmweCOUSwzA4xekjzoYnr3g"
+          "current_key": "AIzaSyD--d2igQ1lpdGaM3tlds4yG96xojzEQrk"
         }
       ],
       "services": {

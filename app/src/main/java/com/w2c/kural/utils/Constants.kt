@@ -19,7 +19,7 @@ val DB_VERSION = 1
 
 /*NETWORK PROPERTIES*/
 val TO_SEC = 4L
-val BASE_URL = "https://firebasestorage.googleapis.com/v0/b/valid-complex-136508.appspot.com/o/"
+val BASE_URL = "https://firebasestorage.googleapis.com/v0/b/thirukkural-5f267.appspot.com/o/"
 
 /*BUNDLE PROPERTIES*/
 val ATHIKARAM = "athikaram"

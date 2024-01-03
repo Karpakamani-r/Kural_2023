@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("androidx.navigation.safeargs.kotlin")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -77,6 +78,9 @@ dependencies {
 
     //SwipeLayout
     implementation("com.github.zerobranch:SwipeLayout:1.3.1")
+
+    //Firebase Crashlytics
+    implementation("com.google.firebase:firebase-crashlytics:18.6.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

@@ -8,7 +8,7 @@ interface KuralApi {
     @GET(KURAL_URL)
     suspend fun getKural(
         @Query("alt") alt: String = "media",
-        @Query("token") token: String = "95f05837-32a9-484c-a584-e328ec4f97d4"
+        @Query("token") token: String = "9c8ad44f-a816-427f-8b25-21aabbefa9ae"
     ): KuralResponse
 
     companion object {

@@ -7,6 +7,7 @@ import android.content.DialogInterface
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.w2c.kural.R
@@ -15,6 +16,7 @@ import com.w2c.kural.database.DatabaseController
 import com.w2c.kural.database.Kural
 import com.w2c.kural.databinding.ListItemKuralBinding
 import com.w2c.kural.utils.OnItemClickListener
+import com.zerobranch.layout.SwipeLayout
 import java.util.concurrent.Executors
 
 
@@ -33,10 +35,7 @@ class KuralAdapter(private val kuralList: List<Kural>, private val callback: OnI
 
     override fun onBindViewHolder(holder: KuralViewHolder, position: Int) {
         val kural = kuralList[position]
-        holder.kuralListBinding.tvLine1.text = kural.line1
-        holder.kuralListBinding.tvLine2.text = kural.line2
-        val kuralNoTxt = holder.kuralListBinding.root.context.getString(R.string.kural_no)
-        holder.kuralListBinding.tvKuralNo.text = String.format(kuralNoTxt, kural.number)
+        holder.kuralListBinding.kural = kural
     }
 
     override fun getItemCount(): Int {
@@ -48,6 +47,9 @@ class KuralAdapter(private val kuralList: List<Kural>, private val callback: OnI
         init {
             kuralListBinding.constraintLayout.setOnClickListener {
                 callback.onItemClick(adapterPosition)
+            }
+            kuralListBinding.swipeItem.setOnClickListener {
+                callback.onManageFavorite(adapterPosition)
             }
         }
     }

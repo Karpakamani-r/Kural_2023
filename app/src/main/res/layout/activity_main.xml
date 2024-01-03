@@ -47,7 +47,6 @@
                 android:padding="10dp"
                 android:layout_marginEnd="16dp"
                 android:visibility="gone"
-                app:srcCompat="@drawable/ic_favorite"
                 tools:visibility="visible" />
 
         </androidx.appcompat.widget.Toolbar>

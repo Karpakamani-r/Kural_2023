@@ -1,8 +1,17 @@
 package com.w2c.kural.view.activity
 
+import android.Manifest
+import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -10,27 +19,38 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
+import androidx.work.BackoffPolicy
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequest
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.w2c.kural.R
 import com.w2c.kural.databinding.ActivityMainBinding
 import com.w2c.kural.datasource.LocalDataSource
 import com.w2c.kural.datasource.RemoteDataSource
+import com.w2c.kural.notificationwork.NotificationWork
 import com.w2c.kural.repository.MainRepository
+import com.w2c.kural.utils.ATHIKARAM
+import com.w2c.kural.utils.IYAL
+import com.w2c.kural.utils.NOTIFICATION_REQ_CODE
+import com.w2c.kural.utils.NotificationPreference
+import com.w2c.kural.utils.PAAL
+import com.w2c.kural.utils.POST_NOTIFICATIONS
 import com.w2c.kural.utils.ScreenTypes
+import com.w2c.kural.utils.WORK_NAME
 import com.w2c.kural.utils.hide
 import com.w2c.kural.utils.visible
+import com.w2c.kural.utils.getDifferentMillsToNextDay
 import com.w2c.kural.viewmodel.MainActivityViewModel
 import com.w2c.kural.viewmodel.MainVMFactory
 import kotlinx.coroutines.launch
-import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.w2c.kural.utils.ATHIKARAM
-import com.w2c.kural.utils.IYAL
-import com.w2c.kural.utils.PAAL
-import com.w2c.kural.utils.NOTIFICATION_REQ_CODE
+import java.util.concurrent.TimeUnit
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var controller: NavController
-    private var lastActionId: Int? = null
     private lateinit var bottomNavigationBar: BottomNavigationView
     private lateinit var binding: ActivityMainBinding
     private var firstTime = true
@@ -47,7 +67,12 @@ class MainActivity : AppCompatActivity() {
         preLoadKural()
         initView()
         setUpFavoriteObserver()
-        checkNotificationPermission()
+        setUpNotificationObserver()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        verifyPermission()
     }
 
     private fun initView() {
@@ -114,30 +139,55 @@ class MainActivity : AppCompatActivity() {
             updateFavIcon()
             viewModel.onFavClick()
         }
-
         viewModel.favUpdateTBIconLiveData.observe(this) {
             favorite = it
             updateFavIcon()
         }
+        viewModel.favStatusLiveData.observe(this) {
+            val message =
+                if (it[0]) "Successfully, ${if (it[1]) "Added to favorites" else "Removed from favorites"}" else "Something went wrong!, Unable to ${if (it[1]) "add into favorites" else "remove from favorites"}"
+            Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun updateFavIcon() {
-        val resource = if (favorite) R.drawable.ic_favorite else R.drawable.ic_favorite_border
+        val resource = if (favorite) R.drawable.ic_remove_favorite else R.drawable.ic_add_favorite
         binding.ivFav.setImageResource(resource)
+        binding.ivFav.setColorFilter(
+            ContextCompat.getColor(this, R.color.primary), android.graphics.PorterDuff.Mode.SRC_IN
+        )
+    }
+
+    fun setUpNotificationObserver() {
+        viewModel.notificationLiveData.observe(this) {
+            checkNotificationPermission()
+        }
     }
 
     private fun checkNotificationPermission() {
-        if (shouldShowRequestPermissionRationale("Manifest.permission.POST_NOTIFICATIONS")) {
+        if (Build.VERSION.SDK_INT < 33) {
+            scheduleNotificationWork()
+            return
+        }
 
-        } else if (ContextCompat.checkSelfPermission(
-                this@MainActivity, "Manifest.permission.POST_NOTIFICATIONS"
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this@MainActivity,
-                arrayOf("Manifest.permission.POST_NOTIFICATIONS"),
-                NOTIFICATION_REQ_CODE
-            )
+        when {
+            shouldShowRequestPermissionRationale(POST_NOTIFICATIONS) -> {
+                controller.navigate(R.id.notificationEducationFragment)
+            }
+
+            ContextCompat.checkSelfPermission(
+                this@MainActivity, POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                scheduleNotificationWork()
+            }
+
+            else -> {
+                ActivityCompat.requestPermissions(
+                    this@MainActivity,
+                    arrayOf(POST_NOTIFICATIONS),
+                    NOTIFICATION_REQ_CODE
+                )
+            }
         }
     }
 
@@ -149,8 +199,83 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == NOTIFICATION_REQ_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
+                Toast.makeText(
+                    this@MainActivity,
+                    getString(R.string.notification_granted_info),
+                    Toast.LENGTH_SHORT
+                ).show()
+                viewModel.notificationUpdateUI()
+                scheduleNotificationWork()
+            } else if (!shouldShowRequestPermissionRationale(POST_NOTIFICATIONS)) {
+                showPermissionDialog()
+            } else {
+                ActivityCompat.requestPermissions(
+                    this@MainActivity,
+                    arrayOf(POST_NOTIFICATIONS),
+                    NOTIFICATION_REQ_CODE
+                )
             }
         }
     }
+
+    private fun showPermissionDialog(notify: Boolean = false) {
+        val alertDialog =
+            AlertDialog.Builder(this).setTitle(getString(R.string.permission_required))
+                .setCancelable(false).setMessage(getString(R.string.permission_required_desc))
+                .setPositiveButton(
+                    getString(R.string.go_to_settings)
+                ) { dialogInterface: DialogInterface, _: Int ->
+                    navigateToSettings()
+                    dialogInterface.dismiss()
+                }
+        if (!notify) {
+            alertDialog.setNegativeButton(
+                getString(R.string.not_now),
+            ) { dialogInterface: DialogInterface, _: Int ->
+                dialogInterface.dismiss()
+            }
+        }
+        alertDialog.show()
+    }
+
+    private fun navigateToSettings() {
+        val intent = Intent()
+        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+        val uri = Uri.fromParts(
+            "package",
+            packageName, null
+        )
+        intent.data = uri
+        startActivity(intent)
+    }
+
+    private fun scheduleNotificationWork() {
+        val notify = viewModel.updateNotificationStatus(this)
+        if (notify) {
+            val workRequest: PeriodicWorkRequest =
+                PeriodicWorkRequestBuilder<NotificationWork>(1, TimeUnit.DAYS)
+                    .setInitialDelay(getDifferentMillsToNextDay(), TimeUnit.MILLISECONDS)
+                    .setBackoffCriteria(BackoffPolicy.LINEAR, 1, TimeUnit.HOURS)
+                    .build()
+            WorkManager.getInstance(this)
+                .enqueueUniquePeriodicWork(WORK_NAME, ExistingPeriodicWorkPolicy.KEEP, workRequest)
+        } else {
+            WorkManager.getInstance(this).cancelUniqueWork(WORK_NAME)
+        }
+        Toast.makeText(
+            this,
+            "Notification turned ${if (notify) "ON" else "OFF"}",
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun verifyPermission() {
+        if (NotificationPreference.getInstance(this).isDailyNotifyValue &&
+            ContextCompat.checkSelfPermission(this, POST_NOTIFICATIONS)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            showPermissionDialog(true)
+        }
+    }
+
 }

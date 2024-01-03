@@ -14,7 +14,7 @@ interface KuralDAO {
     fun deleteData()
 
     @Update
-    fun updateKuralData(kural: Kural)
+    fun updateKuralData(kural: Kural): Int
 
     @get:Query("select * from Kural")
     val allKural: List<Kural>

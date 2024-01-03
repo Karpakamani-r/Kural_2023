@@ -33,17 +33,19 @@ class SettingsAdapter(private val callback: OnItemClickListener, private val mLi
 
     override fun onBindViewHolder(holder: SettingsViewHolder, position: Int) {
         val item = mList[position]
-        holder.settingsBinding.tvNotification.visibility =
-            if (position > 0) View.VISIBLE else View.GONE
-        holder.settingsBinding.switch1.visibility =
-            if (position == 0) View.VISIBLE else View.GONE
-        holder.settingsBinding.tvNotification.text = item.description
         if (position == 0) {
-            holder.settingsBinding.switch1.isChecked =
-                NotificationPreference.getInstance(holder.itemView.context)
-                    .isDailyNotifyValue
+            holder.settingsBinding.switch1.visibility = View.VISIBLE
+            holder.settingsBinding.tvSettings.visibility = View.GONE
+            val notify = NotificationPreference.getInstance(holder.itemView.context)
+                .isDailyNotifyValue
+            holder.settingsBinding.switch1.isChecked = notify
+            holder.settingsBinding.ivSettings.setImageResource(if (notify) item.images.first() else item.images[1])
+        } else {
+            holder.settingsBinding.tvSettings.visibility = View.VISIBLE
+            holder.settingsBinding.switch1.visibility = View.GONE
+            holder.settingsBinding.tvSettings.text = item.description
+            holder.settingsBinding.ivSettings.setImageResource(item.images.first())
         }
-        holder.settingsBinding.ivSettings.setImageResource(item.images.first())
     }
 
     override fun getItemCount(): Int {

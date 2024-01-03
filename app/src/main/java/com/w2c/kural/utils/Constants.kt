@@ -1,5 +1,7 @@
 package com.w2c.kural.utils
 
+import android.Manifest
+
 /*SETTINGS PROPERTIES*/
 val MAIL_TO = "mailto:"
 val SUPPORT_MAIL_ID = "w2csupport@gmail.com"
@@ -27,3 +29,4 @@ val KURAL = "kural"
 
 /*PERMISSION PROPERTIES*/
 val NOTIFICATION_REQ_CODE = 1010
+val POST_NOTIFICATIONS = Manifest.permission.POST_NOTIFICATIONS

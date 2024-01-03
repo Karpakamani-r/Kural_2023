@@ -129,15 +129,15 @@ class MainRepository constructor(
                     if (iyalName != null) {
                         if (iyalName.equals(name)) {
                             for (k in 0..detail.length() - 1) {
-                                val name = detail.getJSONObject(k).getString("name").toString()
-                                athikaram.add(name)
+                                val n = detail.getJSONObject(k).getString("name").toString()
+                                athikaram.add(n)
                             }
                             break
                         }
                     } else {
                         for (k in 0..detail.length() - 1) {
-                            val name = detail.getJSONObject(k).getString("name").toString()
-                            athikaram.add(name)
+                            val nm = detail.getJSONObject(k).getString("name").toString()
+                            athikaram.add(nm)
                         }
                     }
                 }
@@ -174,11 +174,14 @@ class MainRepository constructor(
         return kuralListLiveData
     }
 
-    suspend fun updateFavorite(context: Context, kural: Kural) {
-        withContext(Dispatchers.IO) {
-            localDataSource.updateFavorite(context, kural)
+    suspend fun updateFavorite(context: Context, kural: Kural): Int {
+        return withContext(Dispatchers.IO) {
+            val statusCode = localDataSource.updateFavorite(context, kural)
+            if (statusCode > 0) {
+                getFavorites(context)
+            }
+            statusCode
         }
-        getFavorites(context)
     }
 
     private fun filterKuralByAthikaram(

@@ -8,15 +8,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.w2c.kural.R
 import com.w2c.kural.adapter.KuralAdapter
 import com.w2c.kural.database.Kural
 import com.w2c.kural.databinding.FragmentFavouriteBinding
 import com.w2c.kural.utils.OnItemClickListener
-import com.w2c.kural.utils.SwipeHelper
-import com.w2c.kural.view.activity.MainActivity
 import com.w2c.kural.viewmodel.MainActivityViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,7 +49,6 @@ class Favourites : Fragment(), OnItemClickListener {
         favAdapter = KuralAdapter(favourites, this)
         favAdapter?.setFromFavourite()
         binding.rvFavourite.adapter = favAdapter
-        setUpSwipeInRecyclerView()
     }
 
     override fun onItemClick(position: Int) {
@@ -62,30 +57,13 @@ class Favourites : Fragment(), OnItemClickListener {
         findNavController().navigate(kuralDetailDirection)
     }
 
-    private fun setUpSwipeInRecyclerView() {
-        val itemTouchHelper = ItemTouchHelper(object : SwipeHelper(binding.rvFavourite) {
-            override fun instantiateUnderlayButton(position: Int): List<UnderlayButton> {
-                return listOf(favoriteButton(position))
+    override fun onManageFavorite(position: Int) {
+        lifecycleScope.launch(Dispatchers.Main) {
+            val kural = favourites[position].apply {
+                favourite = 0
             }
-        })
-        itemTouchHelper.attachToRecyclerView(binding.rvFavourite)
-    }
-
-    private fun favoriteButton(position: Int): SwipeHelper.UnderlayButton {
-        return SwipeHelper.UnderlayButton(
-            requireActivity(),
-            "Mark as Unfavorite",
-            18.0f,
-            R.color.primaryDark,
-            object : SwipeHelper.UnderlayButtonClickListener {
-                override fun onClick() {
-                    lifecycleScope.launch(Dispatchers.Main) {
-                        val kural = favourites[position].apply {
-                            favourite = 0
-                        }
-                        viewModel.manageFavorite(requireActivity(), kural)
-                    }
-                }
-            })
+            favAdapter?.notifyItemChanged(position, kural)
+            val statusCode = viewModel.manageFavorite(requireActivity(), kural)
+        }
     }
 }

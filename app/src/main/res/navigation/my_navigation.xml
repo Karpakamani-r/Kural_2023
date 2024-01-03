@@ -108,4 +108,8 @@
             android:id="@+id/action_iyalList_to_athikaramList"
             app:destination="@id/athikaramList" />
     </fragment>
+    <dialog
+        android:id="@+id/notificationEducationFragment"
+        android:name="com.w2c.kural.view.fragment.NoticeFragment"
+        android:label="NotificationEducationFragment" />
 </navigation>

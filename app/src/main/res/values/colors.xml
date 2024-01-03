@@ -4,9 +4,10 @@
     <color name="white">#FFFFFFFF</color>
     <color name="primary">#E736BC</color>
     <color name="primaryDark">#4A1784</color>
-    <color name="tv_selection_color">#FFF2CE</color>
+    <color name="tvSelectionColor">#FFF2CE</color>
     <color name="grey">#D3D3D3</color>
     <color name="greyDark">#696969</color>
+    <color name="green">#00D00C</color>
 
     <color name="searchTextColor">@color/black</color>
     <color name="searchBoxBackgroundColor">#90E0E0E0</color>
@@ -16,4 +17,5 @@
     <color name="backgroundColor">@color/white</color>
     <color name="settingIconBgColor">#604A1784</color>
     <color name="bottomNavSelectionColor">#E4DCED</color>
+    <color name="kuralListItemBgColor">@color/white</color>
 </resources>

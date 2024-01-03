@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 import com.w2c.kural.database.DatabaseController
 import com.w2c.kural.database.Kural
 import com.w2c.kural.utils.hide
@@ -35,9 +37,16 @@ class KuralDetails : Fragment() {
     ): View? {
         kuralBinding = FragmentKuralDetailsBinding.inflate(LayoutInflater.from(requireActivity()))
         viewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
+        setUpAd()
         updateUI()
         setUpFavoriteClickObserver()
         return kuralBinding.root
+    }
+
+    private fun setUpAd() {
+        MobileAds.initialize(requireActivity())
+        val adRequest = AdRequest.Builder().build()
+        kuralBinding.adView.loadAd(adRequest)
     }
 
     private fun updateUI() {

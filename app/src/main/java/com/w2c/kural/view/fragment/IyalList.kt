@@ -14,7 +14,6 @@ import com.w2c.kural.R
 import com.w2c.kural.adapter.AthikaramAdapter
 import com.w2c.kural.databinding.FragmentIyalListBinding
 import com.w2c.kural.utils.AthikaramClickListener
-import com.w2c.kural.utils.OnItemClickListener
 import com.w2c.kural.utils.ScreenTypes
 import com.w2c.kural.view.activity.MainActivity
 import com.w2c.kural.viewmodel.MainActivityViewModel
@@ -40,7 +39,7 @@ class IyalList : Fragment(), AthikaramClickListener {
         return binding.root
     }
 
-    private inline fun loadData() {
+    private fun loadData() {
         val args: AthikaramListArgs by navArgs()
         loadIyal(args.paal, getString(R.string.iyal))
     }

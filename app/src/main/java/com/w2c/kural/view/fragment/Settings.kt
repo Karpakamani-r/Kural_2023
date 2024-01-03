@@ -1,12 +1,9 @@
 package com.w2c.kural.view.fragment
 
-import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,38 +11,38 @@ import com.w2c.kural.adapter.SettingsAdapter
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.work.BackoffPolicy
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequest
-import androidx.work.PeriodicWorkRequest
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
+import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 import com.w2c.kural.databinding.FragmentSettingsBinding
-import com.w2c.kural.notificationwork.NotificationWork
-import com.w2c.kural.utils.NotificationPreference
 import com.w2c.kural.utils.OnItemClickListener
 import com.w2c.kural.utils.todayDate
-import com.w2c.kural.view.activity.MainActivity
-import java.text.SimpleDateFormat
 import java.util.ArrayList
-import java.util.Date
-import java.util.Locale
-import java.util.concurrent.TimeUnit
 import com.w2c.kural.utils.*
 import com.w2c.kural.R
 import com.w2c.kural.model.Setting
+import com.w2c.kural.viewmodel.MainActivityViewModel
 
 class Settings : Fragment(), OnItemClickListener {
     private lateinit var settingsBinding: FragmentSettingsBinding
     private lateinit var adapter: SettingsAdapter
+    private lateinit var viewModel: MainActivityViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         settingsBinding = FragmentSettingsBinding.inflate(inflater)
+        setUpAd()
         settingsList
+        viewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
+        observeUIUpdate()
         return settingsBinding.root
+    }
+
+    private fun setUpAd() {
+        MobileAds.initialize(requireActivity())
+        val adRequest = AdRequest.Builder().build()
+        settingsBinding.adView.loadAd(adRequest)
     }
 
     private val settingsList: Unit
@@ -54,25 +51,25 @@ class Settings : Fragment(), OnItemClickListener {
 
             val dailyNotify = Setting(
                 getString(R.string.daily_one_kural),
-                listOf<Int>(R.drawable.ic_bell_enable, R.drawable.ic_bell_disable)
+                listOf(R.drawable.ic_bell_enable, R.drawable.ic_bell_disable)
             )
             list.add(dailyNotify)
 
             val feedBack = Setting(
                 getString(R.string.feedback),
-                listOf<Int>(R.drawable.ic_email)
+                listOf(R.drawable.ic_email)
             )
             list.add(feedBack)
 
             val rateUs = Setting(
                 getString(R.string.rate_us),
-                listOf<Int>(R.drawable.ic_rate)
+                listOf(R.drawable.ic_rate)
             )
             list.add(rateUs)
 
             val shareApp = Setting(
                 getString(R.string.share_app),
-                listOf<Int>(R.drawable.ic_share)
+                listOf(R.drawable.ic_share)
             )
             list.add(shareApp)
 
@@ -81,10 +78,16 @@ class Settings : Fragment(), OnItemClickListener {
             settingsBinding.rvSettings.adapter = adapter
         }
 
+    private fun observeUIUpdate() {
+        viewModel.notificationRefreshUILiveData.observe(viewLifecycleOwner) {
+            adapter?.notifyItemChanged(0)
+        }
+    }
+
     override fun onItemClick(position: Int) {
         when (position) {
             0 -> {
-                navigateToDailyNotification()
+                updateNotificationStatus()
                 adapter.notifyItemChanged(position)
             }
 
@@ -102,12 +105,8 @@ class Settings : Fragment(), OnItemClickListener {
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    private fun navigateToDailyNotification() {
-        val preference: NotificationPreference =
-            NotificationPreference.getInstance(requireActivity())
-        preference.isDailyNotifyValue = !preference.isDailyNotifyValue
-        scheduleNotificationWork()
+    private fun updateNotificationStatus() {
+        viewModel.observeNotificationChanges(requireActivity())
     }
 
     private fun navigateToMailIntent() {
@@ -150,17 +149,7 @@ class Settings : Fragment(), OnItemClickListener {
         startActivity(Intent.createChooser(shareAppIntent, SHARE_VIA))
     }
 
-    fun scheduleNotificationWork() {
-        if (NotificationPreference.getInstance(requireActivity()).isDailyNotifyValue) {
-            val workRequest: PeriodicWorkRequest =
-                PeriodicWorkRequestBuilder<NotificationWork>(1, TimeUnit.DAYS)
-                    .setInitialDelay(15, TimeUnit.MINUTES)
-                    .setBackoffCriteria(BackoffPolicy.LINEAR, 1, TimeUnit.HOURS)
-                    .build()
-            WorkManager.getInstance(requireActivity())
-                .enqueueUniquePeriodicWork(WORK_NAME, ExistingPeriodicWorkPolicy.KEEP, workRequest)
-        } else {
-            WorkManager.getInstance(requireActivity()).cancelUniqueWork(WORK_NAME)
-        }
+    override fun onManageFavorite(position: Int) {
+        //Needs to handle, If required
     }
 }

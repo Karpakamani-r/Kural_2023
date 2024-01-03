@@ -60,8 +60,8 @@ class LocalDataSource : DataSource {
         )
     }
 
-    suspend fun updateFavorite(context: Context, kural: Kural){
-        DatabaseController.getInstance(context)
+    suspend fun updateFavorite(context: Context, kural: Kural): Int{
+       return DatabaseController.getInstance(context)
             .kuralDAO
             .updateKuralData(kural)
     }

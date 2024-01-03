@@ -12,21 +12,18 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.w2c.kural.adapter.KuralAdapter
 import com.w2c.kural.database.Kural
 import com.w2c.kural.databinding.KuralListBinding
 import com.w2c.kural.utils.Progress
 import com.w2c.kural.utils.ScreenTypes
-import com.w2c.kural.utils.SwipeHelper
 import com.w2c.kural.utils.hide
 import com.w2c.kural.utils.visible
 import com.w2c.kural.utils.OnItemClickListener
 
 import com.w2c.kural.viewmodel.MainActivityViewModel
 import kotlinx.coroutines.*
-import com.w2c.kural.R
 
 class KuralList : Fragment(), OnItemClickListener {
     private lateinit var binding: KuralListBinding
@@ -73,7 +70,7 @@ class KuralList : Fragment(), OnItemClickListener {
             runnable = Runnable {
                 searchKural(key)
             }
-            handler.postDelayed(runnable, 1000)
+            handler.postDelayed(runnable, 500)
         }
         binding.ivCancel.setOnClickListener {
             binding.edtSearch.setText("")
@@ -81,7 +78,6 @@ class KuralList : Fragment(), OnItemClickListener {
             kuralAdapter?.notifyDataSetChanged()
             binding.tvNotFound.hide()
         }
-        setUpSwipeInRecyclerView()
     }
 
     private fun manageCancelView(key: String) {
@@ -90,33 +86,6 @@ class KuralList : Fragment(), OnItemClickListener {
         } else {
             binding.ivCancel.hide()
         }
-    }
-
-    private fun setUpSwipeInRecyclerView() {
-        val itemTouchHelper = ItemTouchHelper(object : SwipeHelper(binding.rvKuralList) {
-            override fun instantiateUnderlayButton(position: Int): List<UnderlayButton> {
-                return listOf(favoriteButton(position))
-            }
-        })
-        itemTouchHelper.attachToRecyclerView(binding.rvKuralList)
-    }
-
-    private fun favoriteButton(position: Int): SwipeHelper.UnderlayButton {
-        return SwipeHelper.UnderlayButton(
-            requireActivity(),
-            if (mKuralList[position].favourite == 0) "Mark as Favorite" else "Mark as Unfavorite",
-            18.0f,
-            R.color.primaryDark,
-            object : SwipeHelper.UnderlayButtonClickListener {
-                override fun onClick() {
-                    lifecycleScope.launch(Dispatchers.Main) {
-                        val kural = mKuralList[position].apply {
-                            favourite = if (favourite == 0) 1 else 0
-                        }
-                        viewModel.manageFavorite(requireActivity(), kural)
-                    }
-                }
-            })
     }
 
     private fun searchKural(searchKey: String) {
@@ -200,6 +169,16 @@ class KuralList : Fragment(), OnItemClickListener {
         val kuralNumber = mKuralList.get(position).number
         val kuralDetailDirection = KuralListDirections.actionHomeToKuralDetails(kuralNumber)
         findNavController().navigate(kuralDetailDirection)
+    }
+
+    override fun onManageFavorite(position: Int) {
+        lifecycleScope.launch(Dispatchers.Main) {
+            val kural = mKuralList[position].apply {
+                favourite = if (favourite == 0) 1 else 0
+            }
+            kuralAdapter?.notifyItemChanged(position, kural)
+            viewModel.manageFavorite(requireActivity(), kural)
+        }
     }
 
     override fun onDestroy() {

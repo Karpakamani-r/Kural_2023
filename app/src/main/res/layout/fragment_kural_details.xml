@@ -233,6 +233,16 @@
                 app:layout_constraintTop_toBottomOf="@+id/tvCuptTitle"
                 tools:text="If clouds, that promised rain, deceive, and in the sky remain,Famine, sore torment, stalks o'er earth's vast ocean-girdled plain" />
 
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/adView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:adSize="BANNER"
+                app:adUnitId="@string/ad_unit_id"
+                app:layout_constraintTop_toBottomOf="@+id/tvCupt"
+                tools:layout_editor_absoluteX="10dp" />
+
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline4"
                 android:layout_width="wrap_content"

@@ -38,7 +38,7 @@ class AthikaramList : Fragment(), AthikaramClickListener {
         return binding.root
     }
 
-    private inline fun loadData() {
+    private fun loadData() {
         val args: AthikaramListArgs by navArgs()
         loadAthikaram(args.paal, args.iyal, getString(R.string.athikaram))
     }

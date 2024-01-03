@@ -10,7 +10,7 @@
     <string name="thirukural">திருக்குறள்</string>
     <string name="daily_one_kural">தினம் ஒரு குறள்</string>
     <string name="feedback">மின்னஞ்சல் மூலம் கருத்து அனுப்ப</string>
-    <string name="rate_us">பிளேஸ்டோரில் எங்களை மதிப்பிட</string>
+    <string name="rate_us">பிளேஸ்டோரில் செயலியை மதிப்பிட</string>
     <string name="share_app">இந்த செயலியை பகிர</string>
     <string name="search">குறள் தேடல்</string>
     <string name="search_hint">குறள் எண்/வார்த்தை</string>
@@ -30,4 +30,12 @@
     <!--Kural Not Found, Please search with valid word or number-->
     <string name="kural_not_found">குறள் கிடைக்கவில்லை, சரியான வார்த்தை அல்லது எண்ணைக் கொண்டு தேடவும்</string>
 
+    <string name="permission_required">Permission Required!</string>
+    <string name="permission_required_desc">This app has feature to send daily one kural notification, Please enable notification permission in device settings.</string>
+    <string name="go_to_settings">Go To Settings</string>
+    <string name="not_now">Not Now</string>
+    <string name="notification_info">This app has feature to send daily one kural notification, Please enable notification permission by clicking ok.</string>
+    <string name="notification_granted_info">Permission granted for sending daily one kural notification.</string>
+
+    <string name="ad_unit_id">ca-app-pub-8676882032589738/5807664758</string>
 </resources>

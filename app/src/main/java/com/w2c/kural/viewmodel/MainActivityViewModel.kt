@@ -7,13 +7,13 @@ import androidx.lifecycle.ViewModel
 import com.w2c.kural.R
 import com.w2c.kural.database.Kural
 import com.w2c.kural.repository.MainRepository
-import com.w2c.kural.utils.ScreenTypes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.*
 import com.w2c.kural.utils.ATHIKARAM
 import com.w2c.kural.utils.IYAL
 import com.w2c.kural.utils.KURAL
+import com.w2c.kural.utils.NotificationPreference
 
 class MainActivityViewModel(private val mainRepository: MainRepository) :
     ViewModel() {
@@ -22,10 +22,19 @@ class MainActivityViewModel(private val mainRepository: MainRepository) :
     val kuralCache: List<Kural> = kuralCache_
 
     private val favClickLiveData_: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
-    val favClickLiveData = favClickLiveData_
+    val favClickLiveData: LiveData<Boolean> = favClickLiveData_
 
     private val favUpdateTBIconLiveData_: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
-    val favUpdateTBIconLiveData = favUpdateTBIconLiveData_
+    val favUpdateTBIconLiveData: LiveData<Boolean> = favUpdateTBIconLiveData_
+
+    private val favStatusLiveData_: MutableLiveData<Array<Boolean>> = MutableLiveData<Array<Boolean>>()
+    val favStatusLiveData: LiveData<Array<Boolean>> = favStatusLiveData_
+
+    private val notificationLiveData_: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    val notificationLiveData: LiveData<Boolean> = notificationLiveData_
+
+    private val notificationRefreshUILiveData_: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    val notificationRefreshUILiveData: LiveData<Boolean> = notificationRefreshUILiveData_
 
     private val data: MutableLiveData<List<String>> = MutableLiveData<List<String>>()
 
@@ -115,7 +124,11 @@ class MainActivityViewModel(private val mainRepository: MainRepository) :
     }
 
     suspend fun manageFavorite(context: Context, kural: Kural) {
-        mainRepository.updateFavorite(context, kural)
+        kuralCache_.set(kural.number - 1, kural)
+        val statusCode = mainRepository.updateFavorite(context, kural)
+        //(statusCode>0) refers db update status, (kural.favourite == 1) referes add/remove process
+        val res = arrayOf(statusCode > 0, kural.favourite == 1)
+        favStatusLiveData_.value = res
     }
 
     fun onFavClick() {
@@ -128,6 +141,20 @@ class MainActivityViewModel(private val mainRepository: MainRepository) :
 
     suspend fun getKuralDetail(context: Context, number: Int): LiveData<Kural> {
         return mainRepository.getKuralDetail(context, number)
+    }
+
+    fun observeNotificationChanges(context: Context) {
+        notificationLiveData_.value = true
+    }
+
+    fun updateNotificationStatus(context: Context): Boolean{
+        val prefs = NotificationPreference.getInstance(context)
+        prefs.isDailyNotifyValue = !prefs.isDailyNotifyValue
+        return prefs.isDailyNotifyValue
+    }
+
+    fun notificationUpdateUI(){
+        notificationRefreshUILiveData_.value = true
     }
 
     fun isMatchesFound(searchText: String, kural: Kural?): Boolean {

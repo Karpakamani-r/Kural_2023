@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import androidx.work.BackoffPolicy
@@ -59,6 +60,7 @@ class MainActivity : AppCompatActivity() {
         R.id.paalFragment, R.id.home, R.id.favourite, R.id.setting
     )
     private var favorite = false
+    private var isInSettings = false
     private lateinit var viewModel: MainActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -172,14 +174,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         when {
-            shouldShowRequestPermissionRationale(POST_NOTIFICATIONS) -> {
-                controller.navigate(R.id.notificationEducationFragment)
-            }
-
             ContextCompat.checkSelfPermission(
                 this@MainActivity, POST_NOTIFICATIONS
             ) == PackageManager.PERMISSION_GRANTED -> {
                 scheduleNotificationWork()
+            }
+
+            shouldShowRequestPermissionRationale(POST_NOTIFICATIONS) -> {
+                controller.navigate(R.id.notificationEducationFragment)
             }
 
             else -> {
@@ -205,15 +207,14 @@ class MainActivity : AppCompatActivity() {
                     getString(R.string.notification_granted_info),
                     Toast.LENGTH_SHORT
                 ).show()
-                viewModel.notificationUpdateUI()
                 scheduleNotificationWork()
+            } else if (shouldShowRequestPermissionRationale(POST_NOTIFICATIONS)) {
+                controller.navigate(R.id.notificationEducationFragment)
             } else if (!shouldShowRequestPermissionRationale(POST_NOTIFICATIONS)) {
                 showPermissionDialog()
             } else {
                 ActivityCompat.requestPermissions(
-                    this@MainActivity,
-                    arrayOf(POST_NOTIFICATIONS),
-                    NOTIFICATION_REQ_CODE
+                    this@MainActivity, arrayOf(POST_NOTIFICATIONS), NOTIFICATION_REQ_CODE
                 )
             }
         }
@@ -240,6 +241,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun navigateToSettings() {
+        isInSettings = true
         val intent = Intent()
         intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
         val uri = Uri.fromParts(
@@ -263,20 +265,33 @@ class MainActivity : AppCompatActivity() {
         } else {
             WorkManager.getInstance(this).cancelUniqueWork(WORK_NAME)
         }
+        updateSettingsUI(notify)
+    }
+
+    private fun verifyPermission() {
+        //If ==> When the notification on in app setting but
+        //it turned off in mobile setting, forcing user to turn on permission in settings.
+        //Else ==> Updating UI when user currently in app settings and turning on the
+        //notification permission from mobile settings
+        val granted = ContextCompat.checkSelfPermission(
+            this,
+            POST_NOTIFICATIONS
+        ) == PackageManager.PERMISSION_GRANTED
+        if (NotificationPreference.getInstance(this).isDailyNotifyValue &&
+            !granted
+        ) {
+            showPermissionDialog(true)
+        } else if (isInSettings && granted) {
+            scheduleNotificationWork()
+        }
+    }
+
+    private fun updateSettingsUI(notify: Boolean) {
+        viewModel.notificationUpdateUI()
         Toast.makeText(
             this,
             "Notification turned ${if (notify) "ON" else "OFF"}",
             Toast.LENGTH_SHORT
         ).show()
     }
-
-    private fun verifyPermission() {
-        if (NotificationPreference.getInstance(this).isDailyNotifyValue &&
-            ContextCompat.checkSelfPermission(this, POST_NOTIFICATIONS)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            showPermissionDialog(true)
-        }
-    }
-
 }

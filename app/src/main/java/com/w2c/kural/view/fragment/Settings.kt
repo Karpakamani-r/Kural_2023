@@ -2,14 +2,17 @@ package com.w2c.kural.view.fragment
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.w2c.kural.adapter.SettingsAdapter
 import android.view.View
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.ads.AdRequest
@@ -33,8 +36,7 @@ class Settings : Fragment(), OnItemClickListener {
     ): View {
         settingsBinding = FragmentSettingsBinding.inflate(inflater)
         setUpAd()
-        settingsList
-        viewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
+        loadSettingsData()
         observeUIUpdate()
         return settingsBinding.root
     }
@@ -45,42 +47,17 @@ class Settings : Fragment(), OnItemClickListener {
         settingsBinding.adView.loadAd(adRequest)
     }
 
-    private val settingsList: Unit
-        get() {
-            val list = ArrayList<Setting>()
-
-            val dailyNotify = Setting(
-                getString(R.string.daily_one_kural),
-                listOf(R.drawable.ic_bell_enable, R.drawable.ic_bell_disable)
-            )
-            list.add(dailyNotify)
-
-            val feedBack = Setting(
-                getString(R.string.feedback),
-                listOf(R.drawable.ic_email)
-            )
-            list.add(feedBack)
-
-            val rateUs = Setting(
-                getString(R.string.rate_us),
-                listOf(R.drawable.ic_rate)
-            )
-            list.add(rateUs)
-
-            val shareApp = Setting(
-                getString(R.string.share_app),
-                listOf(R.drawable.ic_share)
-            )
-            list.add(shareApp)
-
-            settingsBinding.rvSettings.layoutManager = LinearLayoutManager(requireActivity())
-            adapter = SettingsAdapter(this, list)
-            settingsBinding.rvSettings.adapter = adapter
-        }
+    private fun loadSettingsData() {
+        viewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
+        val data = viewModel.getSettingsData(requireActivity())
+        settingsBinding.rvSettings.layoutManager = LinearLayoutManager(requireActivity())
+        adapter = SettingsAdapter(this, data)
+        settingsBinding.rvSettings.adapter = adapter
+    }
 
     private fun observeUIUpdate() {
         viewModel.notificationRefreshUILiveData.observe(viewLifecycleOwner) {
-            adapter?.notifyItemChanged(0)
+            adapter.notifyItemChanged(0)
         }
     }
 
@@ -88,7 +65,6 @@ class Settings : Fragment(), OnItemClickListener {
         when (position) {
             0 -> {
                 updateNotificationStatus()
-                adapter.notifyItemChanged(position)
             }
 
             1 -> {
@@ -151,5 +127,18 @@ class Settings : Fragment(), OnItemClickListener {
 
     override fun onManageFavorite(position: Int) {
         //Needs to handle, If required
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        removeAdView()
+    }
+
+    private fun removeAdView() {
+        val adView = settingsBinding.adView
+        if (adView.parent != null) {
+            (adView.parent as ViewGroup).removeView(adView)
+        }
+        adView.destroy()
     }
 }

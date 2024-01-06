@@ -36,6 +36,7 @@ class KuralDetails : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         kuralBinding = FragmentKuralDetailsBinding.inflate(LayoutInflater.from(requireActivity()))
+        kuralBinding.parentLayout.hide()
         viewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
         setUpAd()
         updateUI()
@@ -57,6 +58,7 @@ class KuralDetails : Fragment() {
                     kural = it
                     kuralBinding.kural = kural
                     viewModel.updateFavToolBarIcon(kural.favourite == 1)
+                    kuralBinding.parentLayout.visible()
                 }
         }
     }
@@ -72,5 +74,18 @@ class KuralDetails : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        removeAdView()
+    }
+
+    private fun removeAdView() {
+        val adView = kuralBinding.adView
+        if (adView.parent != null) {
+            (adView.parent as ViewGroup).removeView(adView)
+        }
+        adView.destroy()
     }
 }

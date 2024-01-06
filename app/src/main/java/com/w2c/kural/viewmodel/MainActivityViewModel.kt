@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.w2c.kural.R
 import com.w2c.kural.database.Kural
+import com.w2c.kural.model.Setting
 import com.w2c.kural.repository.MainRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -151,6 +152,10 @@ class MainActivityViewModel(private val mainRepository: MainRepository) :
         val prefs = NotificationPreference.getInstance(context)
         prefs.isDailyNotifyValue = !prefs.isDailyNotifyValue
         return prefs.isDailyNotifyValue
+    }
+
+    fun getSettingsData(context: Context): List<Setting> {
+        return mainRepository.getSettingsData(context)
     }
 
     fun notificationUpdateUI(){

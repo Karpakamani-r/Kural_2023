@@ -24,6 +24,7 @@
     <string name="athikaram">அதிகாரம்</string>
     <string name="kurals">குறள்கள்</string>
     <string name="kural_explanation">குறள் விளக்கம்</string>
+    <string name="wait">காத்திருக்கவும்</string>
 
     <string name="kural_no_eng">Kural No-%d</string>
     <string name="explanation">Explanation:</string>

@@ -81,6 +81,10 @@ dependencies {
 
     //Firebase Crashlytics
     implementation("com.google.firebase:firebase-crashlytics:18.6.0")
+    implementation("com.google.firebase:firebase-analytics:21.5.0")
+
+    //LeakCanary
+    debugImplementation ("com.squareup.leakcanary:leakcanary-android:2.13")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

@@ -2,6 +2,7 @@ package com.w2c.kural.utils
 
 import android.app.ProgressDialog
 import android.content.*
+import com.w2c.kural.R
 
 /**
  * This Singleton class is the progress bar class
@@ -53,6 +54,6 @@ class Progress private constructor(context: Context) {
     init {
         mDialog = ProgressDialog(context)
         mDialog.setCancelable(false)
-        mDialog.setMessage("Please Wait...")
+        mDialog.setMessage(context.getString(R.string.wait))
     }
 }

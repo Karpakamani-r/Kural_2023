@@ -25,14 +25,15 @@ import com.w2c.kural.utils.KURAL
 
 class PaalList : Fragment() {
 
-    private lateinit var binding: FragmentPaalBinding
+    private var binding_: FragmentPaalBinding? = null
+    private val binding get() = binding_!!
     private lateinit var mainActivityViewModel: MainActivityViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentPaalBinding.inflate(LayoutInflater.from(requireActivity()))
+        binding_ = FragmentPaalBinding.inflate(LayoutInflater.from(requireActivity()))
         mainActivityViewModel =
             ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
         setUpAd()
@@ -143,5 +144,19 @@ class PaalList : Fragment() {
             screenType = ScreenTypes.KURALH, paal = paal, athikaram = null, iyal = null
         )
         findNavController().navigate(kuralListDirection)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        removeAdView()
+        binding_ = null
+    }
+
+    private fun removeAdView() {
+        val adView = binding.adView
+        if (adView.parent != null) {
+            (adView.parent as ViewGroup).removeView(adView)
+        }
+        adView.destroy()
     }
 }

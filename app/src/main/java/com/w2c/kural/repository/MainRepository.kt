@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.w2c.kural.database.Kural
 import com.w2c.kural.datasource.LocalDataSource
 import com.w2c.kural.datasource.RemoteDataSource
+import com.w2c.kural.model.Setting
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
@@ -15,6 +16,8 @@ class MainRepository constructor(
     private val localDataSource: LocalDataSource, private val remoteDataSource: RemoteDataSource
 ) {
     private val kuralListLiveData = MutableLiveData<List<Kural>>()
+    private val kuralListByRangeLiveData = MutableLiveData<List<Kural>>()
+    private val favoriteKuralListLiveData = MutableLiveData<List<Kural>>()
     private val kuralLiveData = MutableLiveData<Kural>()
 
     suspend fun getKurals(context: Context): LiveData<List<Kural>> {
@@ -43,9 +46,9 @@ class MainRepository constructor(
                 localDataSource.cacheKural(context, kurals)
                 kuralList = localDataSource.getKuralsByRange(context, startIndex, endIndex)
             }
-            kuralListLiveData.postValue(kuralList)
+            kuralListByRangeLiveData.postValue(kuralList)
         }
-        return kuralListLiveData
+        return kuralListByRangeLiveData
     }
 
     suspend fun getKuralDetail(context: Context, number: Int): LiveData<Kural> {
@@ -169,9 +172,9 @@ class MainRepository constructor(
     suspend fun getFavorites(context: Context): LiveData<List<Kural>> {
         withContext(Dispatchers.IO) {
             val favourites = localDataSource.getFavourites(context)
-            kuralListLiveData.postValue(favourites)
+            favoriteKuralListLiveData.postValue(favourites)
         }
-        return kuralListLiveData
+        return favoriteKuralListLiveData
     }
 
     suspend fun updateFavorite(context: Context, kural: Kural): Int {
@@ -215,5 +218,9 @@ class MainRepository constructor(
         val endIndex =
             chapterArrayEnd.getJSONObject(chapterArrayEnd.length() - 1).getInt("end")
         return "$startIndex-$endIndex"
+    }
+
+    fun getSettingsData(context: Context): List<Setting> {
+        return localDataSource.getSettingsData(context)
     }
 }

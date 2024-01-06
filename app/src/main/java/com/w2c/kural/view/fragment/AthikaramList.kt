@@ -45,7 +45,7 @@ class AthikaramList : Fragment(), AthikaramClickListener {
 
     private fun loadAthikaram(paal: String, iyal: String?, title: String) {
         lifecycleScope.launch(Dispatchers.Main + getExceptionHandler()) {
-            viewmodel.getAthikaramByPaal(requireActivity(), paal, iyal).observe(requireActivity()) {
+            viewmodel.getAthikaramByPaal(requireActivity(), paal, iyal).observe(viewLifecycleOwner) {
                 it?.let {
                     list = it
                     val adapter = AthikaramAdapter(title, it, this@AthikaramList)

@@ -3,11 +3,14 @@ package com.w2c.kural.datasource
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.w2c.kural.R
 import com.w2c.kural.database.DatabaseController
 import com.w2c.kural.database.Kural
 import com.w2c.kural.datasource.DataSource
+import com.w2c.kural.model.Setting
 import com.w2c.kural.retrofit.KuralResponse
 import java.io.FileNotFoundException
+import java.util.ArrayList
 
 class LocalDataSource : DataSource {
 
@@ -60,9 +63,35 @@ class LocalDataSource : DataSource {
         )
     }
 
-    suspend fun updateFavorite(context: Context, kural: Kural): Int{
-       return DatabaseController.getInstance(context)
+    suspend fun updateFavorite(context: Context, kural: Kural): Int {
+        return DatabaseController.getInstance(context)
             .kuralDAO
             .updateKuralData(kural)
+    }
+
+    fun getSettingsData(context: Context): List<Setting> = buildList{
+        val dailyNotify = Setting(
+            context.getString(R.string.daily_one_kural),
+            listOf(R.drawable.ic_bell_enable, R.drawable.ic_bell_disable)
+        )
+        add(dailyNotify)
+
+        val feedBack = Setting(
+            context.getString(R.string.feedback),
+            listOf(R.drawable.ic_email)
+        )
+        add(feedBack)
+
+        val rateUs = Setting(
+            context.getString(R.string.rate_us),
+            listOf(R.drawable.ic_rate)
+        )
+        add(rateUs)
+
+        val shareApp = Setting(
+            context.getString(R.string.share_app),
+            listOf(R.drawable.ic_share)
+        )
+        add(shareApp)
     }
 }

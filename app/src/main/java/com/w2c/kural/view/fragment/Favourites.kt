@@ -39,7 +39,7 @@ class Favourites : Fragment(), OnItemClickListener {
     private fun fetchFavorites() {
         setupAdapter()
         lifecycleScope.launch(Dispatchers.Main) {
-            viewModel.getFavoriteKurals(requireActivity()).observe(requireActivity()) {
+            viewModel.getFavoriteKurals(requireActivity()).observe(viewLifecycleOwner) {
                 if (favourites.isNotEmpty()) favourites.clear()
                 favourites.addAll(it)
                 favAdapter?.notifyDataSetChanged()

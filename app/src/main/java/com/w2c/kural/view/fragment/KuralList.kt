@@ -2,6 +2,9 @@ package com.w2c.kural.view.fragment
 
 import android.os.Bundle
 import android.os.Handler
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,9 +38,9 @@ class KuralList : Fragment(), OnItemClickListener {
     private lateinit var viewModel: MainActivityViewModel
     private var handler = Handler()
     private lateinit var runnable: Runnable
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         initView()
         getKuralList()
@@ -64,13 +67,24 @@ class KuralList : Fragment(), OnItemClickListener {
         mProgress = Progress.getInstance(requireActivity())
         binding.rvKuralList.layoutManager = LinearLayoutManager(requireActivity())
         viewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
+        if (!isFromHomeCard()) {
+            setUpListeners()
+        }
+    }
+
+    private fun setUpListeners() {
+        binding.edtSearch.tag = false
+        binding.edtSearch.setOnFocusChangeListener { v, _ -> v.tag = true }
         binding.edtSearch.addTextChangedListener {
+            val tag = binding.edtSearch.tag as Boolean
             val key = it.toString().lowercase().trimStart().trimEnd()
-            manageCancelView(key)
-            runnable = Runnable {
-                searchKural(key)
+            if (tag || key.isNotEmpty()) {
+                manageCancelView(key)
+                runnable = Runnable {
+                    searchKural(key)
+                }
+                handler.postDelayed(runnable, 500)
             }
-            handler.postDelayed(runnable, 500)
         }
         binding.ivCancel.setOnClickListener {
             binding.edtSearch.setText("")
@@ -78,6 +92,7 @@ class KuralList : Fragment(), OnItemClickListener {
             kuralAdapter?.notifyDataSetChanged()
             binding.tvNotFound.hide()
         }
+
     }
 
     private fun manageCancelView(key: String) {
@@ -141,7 +156,7 @@ class KuralList : Fragment(), OnItemClickListener {
     private suspend fun fetchKuralsByRange(paal: String, athikaram: String?) {
         mProgress?.showProgress()
         viewModel.getKuralsByRange(requireActivity(), paal, athikaram)
-            .observe(requireActivity()) { data: List<Kural> ->
+            .observe(viewLifecycleOwner) { data: List<Kural> ->
                 setKuralList(data)
                 mProgress?.hideProgress()
             }
@@ -149,8 +164,7 @@ class KuralList : Fragment(), OnItemClickListener {
 
     private suspend fun fetchKurals() {
         mProgress?.showProgress()
-        viewModel.getKurals(requireActivity())
-            .observe(requireActivity()) { data: List<Kural> ->
+        viewModel.getKurals(requireActivity()).observe(viewLifecycleOwner) { data: List<Kural> ->
                 setKuralList(data)
                 mProgress?.hideProgress()
             }
@@ -166,7 +180,7 @@ class KuralList : Fragment(), OnItemClickListener {
     }
 
     override fun onItemClick(position: Int) {
-        val kuralNumber = mKuralList.get(position).number
+        val kuralNumber = mKuralList[position].number
         val kuralDetailDirection = KuralListDirections.actionHomeToKuralDetails(kuralNumber)
         findNavController().navigate(kuralDetailDirection)
     }
@@ -181,8 +195,8 @@ class KuralList : Fragment(), OnItemClickListener {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         if (::runnable.isInitialized && handler.hasCallbacks(runnable)) {
             handler.removeCallbacks(runnable)
         }

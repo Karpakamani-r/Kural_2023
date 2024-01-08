@@ -13,6 +13,7 @@ val STORE_PATH = "http://play.google.com/store/apps/details?id"
 val PLAIN_TEXT = "text/plain"
 val SHARE_VIA = "Share via"
 val WORK_NAME = "kural-work"
+val PACKAGE = "package"
 
 /*DB PROPERTIES*/
 val DB_VERSION = 1

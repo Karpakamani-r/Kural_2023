@@ -25,6 +25,12 @@
     <string name="kurals">குறள்கள்</string>
     <string name="kural_explanation">குறள் விளக்கம்</string>
     <string name="wait">காத்திருக்கவும்</string>
+    <string name="notification_tuned_on">Notification turned ON</string>
+    <string name="notification_tuned_off">Notification turned OFF</string>
+    <string name="added_to_favorites">Successfully, Added to favorites</string>
+    <string name="remove_from_favorites">Successfully, Removed from favorites</string>
+    <string name="unable_to_add">Something went wrong!, Unable to add into favorites</string>
+    <string name="unable_to_remove">Something went wrong!, Unable to remove from favorites</string>
 
     <string name="kural_no_eng">Kural No-%d</string>
     <string name="explanation">Explanation:</string>

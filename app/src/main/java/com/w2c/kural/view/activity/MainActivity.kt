@@ -1,6 +1,5 @@
 package com.w2c.kural.view.activity
 
-import android.Manifest
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -8,7 +7,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -18,7 +16,6 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import androidx.work.BackoffPolicy
@@ -31,7 +28,6 @@ import com.w2c.kural.R
 import com.w2c.kural.databinding.ActivityMainBinding
 import com.w2c.kural.datasource.LocalDataSource
 import com.w2c.kural.datasource.RemoteDataSource
-import com.w2c.kural.notificationwork.MyNotificationManager
 import com.w2c.kural.notificationwork.NotificationWork
 import com.w2c.kural.repository.MainRepository
 import com.w2c.kural.utils.ATHIKARAM
@@ -42,9 +38,10 @@ import com.w2c.kural.utils.PAAL
 import com.w2c.kural.utils.POST_NOTIFICATIONS
 import com.w2c.kural.utils.ScreenTypes
 import com.w2c.kural.utils.WORK_NAME
+import com.w2c.kural.utils.PACKAGE
+import com.w2c.kural.utils.getDifferentMillsToNextDay
 import com.w2c.kural.utils.hide
 import com.w2c.kural.utils.visible
-import com.w2c.kural.utils.getDifferentMillsToNextDay
 import com.w2c.kural.viewmodel.MainActivityViewModel
 import com.w2c.kural.viewmodel.MainVMFactory
 import kotlinx.coroutines.launch
@@ -147,8 +144,13 @@ class MainActivity : AppCompatActivity() {
             updateFavIcon()
         }
         viewModel.favStatusLiveData.observe(this) {
-            val message =
-                if (it[0]) "Successfully, ${if (it[1]) "Added to favorites" else "Removed from favorites"}" else "Something went wrong!, Unable to ${if (it[1]) "add into favorites" else "remove from favorites"}"
+            //it[0] => denotes, status(true=>success/false=>failure)
+            //it[1] => denotes, action(true=>add/false=>remove)
+            val message = if (it[0]) {
+                getString(if (it[1]) R.string.added_to_favorites else R.string.remove_from_favorites)
+            } else {
+                getString(if (it[1]) R.string.unable_to_add else R.string.unable_to_remove)
+            }
             Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
         }
     }
@@ -161,7 +163,7 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    fun setUpNotificationObserver() {
+    private fun setUpNotificationObserver() {
         viewModel.notificationLiveData.observe(this) {
             checkNotificationPermission()
         }
@@ -245,7 +247,7 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent()
         intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
         val uri = Uri.fromParts(
-            "package",
+            PACKAGE,
             packageName, null
         )
         intent.data = uri
@@ -290,7 +292,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.notificationUpdateUI()
         Toast.makeText(
             this,
-            "Notification turned ${if (notify) "ON" else "OFF"}",
+            getString(if (notify) R.string.notification_tuned_on else R.string.notification_tuned_off),
             Toast.LENGTH_SHORT
         ).show()
     }

@@ -58,7 +58,7 @@ class AthikaramList : Fragment(), AthikaramClickListener {
         }
     }
 
-    private val getCallBack = { pos: Int, action: AdapterActions ->
+    private val getCallBack = { pos: Int, _: AdapterActions ->
         onItemClick(pos)
     }
 

@@ -35,6 +35,9 @@
         <action
             android:id="@+id/action_home_to_kuralDetails"
             app:destination="@id/kuralDetails" />
+        <action
+            android:id="@+id/action_home_to_progressDialogFragment"
+            app:destination="@id/progressDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/favourite"
@@ -112,4 +115,8 @@
         android:id="@+id/notificationEducationFragment"
         android:name="com.w2c.kural.view.fragment.NoticeFragment"
         android:label="NotificationEducationFragment" />
+    <dialog
+        android:id="@+id/progressDialogFragment"
+        android:name="com.w2c.kural.view.fragment.ProgressDialogFragment"
+        android:label="ProgressDialogFragment" />
 </navigation>

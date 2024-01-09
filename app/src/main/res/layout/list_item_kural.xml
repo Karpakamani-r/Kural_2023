@@ -27,6 +27,7 @@
             android:layout_gravity="end"
             android:background="@color/green"
             android:clickable="true"
+            android:contentDescription="@string/add_favorite"
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackgroundBorderless"
             android:scaleType="center"
@@ -35,6 +36,10 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
+            android:paddingTop="8dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="8dp"
             android:background="@color/kuralListItemBgColor"
             android:layout_height="wrap_content">
 
@@ -42,13 +47,13 @@
                 android:id="@+id/tvKuralNo"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:text="@{String.format(@string/kural_no, kural.number)}"
                 android:textColor="@color/primary"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@+id/guideline5"
-                app:layout_constraintStart_toStartOf="@+id/guideline2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:text="@{String.format(@string/kural_no, kural.number)}"
                 tools:text="Kural No : 10" />
 
             <TextView
@@ -58,11 +63,11 @@
                 android:layout_marginTop="10dp"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toStartOf="@+id/guideline5"
-                app:layout_constraintStart_toStartOf="@+id/guideline2"
-                app:layout_constraintTop_toBottomOf="@+id/tvKuralNo"
                 android:text="@{kural.line1}"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvKuralNo"
                 tools:text="Test Kural Number 1" />
 
             <TextView
@@ -70,32 +75,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:layout_marginBottom="16dp"
                 android:ellipsize="end"
                 android:singleLine="true"
+                android:text="@{kural.line2}"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/guideline5"
-                app:layout_constraintStart_toStartOf="@+id/guideline2"
-                app:layout_constraintTop_toBottomOf="@+id/tvLine1"
-                android:text="@{kural.line2}"
-                tools:text="Test Kural l" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.05"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintGuide_percent="0.96" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvLine1"
+                tools:text="Test Kural l" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

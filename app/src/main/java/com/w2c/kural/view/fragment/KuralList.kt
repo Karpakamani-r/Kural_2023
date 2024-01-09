@@ -2,9 +2,6 @@ package com.w2c.kural.view.fragment
 
 import android.os.Bundle
 import android.os.Handler
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,14 +17,13 @@ import com.w2c.kural.adapter.KuralAdapter
 import com.w2c.kural.database.Kural
 import com.w2c.kural.databinding.KuralListBinding
 import com.w2c.kural.utils.AdapterActions
-import com.w2c.kural.utils.Progress
 import com.w2c.kural.utils.ScreenTypes
 import com.w2c.kural.utils.hide
 import com.w2c.kural.utils.visible
-import com.w2c.kural.utils.OnItemClickListener
 
 import com.w2c.kural.viewmodel.MainActivityViewModel
 import kotlinx.coroutines.*
+import com.w2c.kural.R
 
 class KuralList : Fragment() {
     private var binding_: KuralListBinding? = null
@@ -36,7 +32,6 @@ class KuralList : Fragment() {
     private var kuralAdapter: KuralAdapter? = null
     private var mKuralList: MutableList<Kural> = mutableListOf()
     private val mKuralListOriginal: MutableList<Kural> = mutableListOf()
-    private var mProgress: Progress? = null
 
     private lateinit var viewModel: MainActivityViewModel
     private var handler = Handler()
@@ -67,7 +62,6 @@ class KuralList : Fragment() {
 
     private fun initView() {
         binding_ = KuralListBinding.inflate(LayoutInflater.from(requireActivity()))
-        mProgress = Progress.getInstance(requireActivity())
         binding.rvKuralList.layoutManager = LinearLayoutManager(requireActivity())
         viewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
         if (!isFromHomeCard()) {
@@ -129,7 +123,7 @@ class KuralList : Fragment() {
     private fun getExceptionHandler(): CoroutineExceptionHandler {
         val handler = CoroutineExceptionHandler { _, exception ->
             lifecycleScope.launch(Dispatchers.Main) {
-                mProgress?.hideProgress()
+                hideProgress()
                 Toast.makeText(requireActivity(), exception.message, Toast.LENGTH_SHORT).show()
             }
         }
@@ -157,20 +151,19 @@ class KuralList : Fragment() {
     }
 
     private suspend fun fetchKuralsByRange(paal: String, athikaram: String?) {
-        mProgress?.showProgress()
         viewModel.getKuralsByRange(requireActivity(), paal, athikaram)
             .observe(viewLifecycleOwner) { data: List<Kural> ->
                 setKuralList(data)
-                mProgress?.hideProgress()
+                hideProgress()
             }
     }
 
     private suspend fun fetchKurals() {
-        mProgress?.showProgress()
+        showProgress()
         viewModel.getKurals(requireActivity()).observe(viewLifecycleOwner) { data: List<Kural> ->
-                setKuralList(data)
-                mProgress?.hideProgress()
-            }
+            setKuralList(data)
+            hideProgress()
+        }
     }
 
     private fun setKuralList(data: List<Kural>) {
@@ -209,5 +202,15 @@ class KuralList : Fragment() {
             handler.removeCallbacks(runnable)
         }
         binding_ = null
+    }
+
+    private fun showProgress() {
+        findNavController().navigate(KuralListDirections.actionHomeToProgressDialogFragment())
+    }
+
+    private fun hideProgress() {
+        if (findNavController().currentDestination!!.id == R.id.progressDialogFragment) {
+            findNavController().popBackStack()
+        }
     }
 }

@@ -11,5 +11,5 @@
 ** Admob for ads.</br></br>
 ** Crashlytics for logging crashes.</br></br>
 ** Firebase for storing files.</br></br>
-** LeakCanary for detecting leaks.</br></br></br>
+** LeakCanary for detecting leaks.</br></br>
 *****************************************************************************************************************

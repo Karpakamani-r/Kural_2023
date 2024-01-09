@@ -9,7 +9,7 @@
     <color name="greyDark">@color/primary</color>
     <color name="green">#8000D00C</color>
 
-    <color name="searchTextColor">@color/primaryDark</color>
+    <color name="searchTextColor">@color/white</color>
     <color name="searchBoxBackgroundColor">#3084C9FB</color>
     <color name="iconColor">@color/primary</color>
     <color name="homeIconColor">@color/primary</color>

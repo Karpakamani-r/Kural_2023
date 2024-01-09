@@ -16,8 +16,7 @@ import com.w2c.kural.utils.IYAL
 import com.w2c.kural.utils.KURAL
 import com.w2c.kural.utils.NotificationPreference
 
-class MainActivityViewModel(private val mainRepository: MainRepository) :
-    ViewModel() {
+class MainActivityViewModel(private val mainRepository: MainRepository) : ViewModel() {
 
     private val kuralCache_: MutableList<Kural> = mutableListOf()
     val kuralCache: List<Kural> = kuralCache_
@@ -28,13 +27,15 @@ class MainActivityViewModel(private val mainRepository: MainRepository) :
     private val favUpdateTBIconLiveData_: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     val favUpdateTBIconLiveData: LiveData<Boolean> = favUpdateTBIconLiveData_
 
-    private val favStatusLiveData_: MutableLiveData<Array<Boolean>> = MutableLiveData<Array<Boolean>>()
+    private val favStatusLiveData_: MutableLiveData<Array<Boolean>> =
+        MutableLiveData<Array<Boolean>>()
     val favStatusLiveData: LiveData<Array<Boolean>> = favStatusLiveData_
 
     private val notificationLiveData_: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     val notificationLiveData: LiveData<Boolean> = notificationLiveData_
 
-    private val notificationRefreshUILiveData_: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    private val notificationRefreshUILiveData_: MutableLiveData<Boolean> =
+        MutableLiveData<Boolean>()
     val notificationRefreshUILiveData: LiveData<Boolean> = notificationRefreshUILiveData_
 
     private val data: MutableLiveData<List<String>> = MutableLiveData<List<String>>()
@@ -52,9 +53,7 @@ class MainActivityViewModel(private val mainRepository: MainRepository) :
     }
 
     suspend fun getKuralsByRange(
-        context: Context,
-        paal: String,
-        athikaram: String?
+        context: Context, paal: String, athikaram: String?
     ): LiveData<List<Kural>> {
         val kuralRange = mainRepository.getKuralRangeByPaal(context, paal, athikaram)
         val indexes = kuralRange?.split("-")
@@ -92,9 +91,7 @@ class MainActivityViewModel(private val mainRepository: MainRepository) :
     }
 
     suspend fun getAthikaramByPaal(
-        context: Context,
-        paal: String,
-        iyal: String?
+        context: Context, paal: String, iyal: String?
     ): LiveData<List<String>> {
         val athikaram = mainRepository.getAthikaramByPaal(context, paal, iyal)
         data.value = athikaram
@@ -125,80 +122,88 @@ class MainActivityViewModel(private val mainRepository: MainRepository) :
     }
 
     suspend fun manageFavorite(context: Context, kural: Kural) {
-        kuralCache_.set(kural.number - 1, kural)
-        val statusCode = mainRepository.updateFavorite(context, kural)
-        //(statusCode>0) refers db update status, (kural.favourite == 1) referes add/remove process
-        val res = arrayOf(statusCode > 0, kural.favourite == 1)
-        favStatusLiveData_.value = res
+        val kuralNumber = kural.number - 1
+        if (!kuralCache_.isEmpty() && kuralCache_.size >= kuralNumber) {
+            kuralCache_.set(kuralNumber, kural)
+            val statusCode = mainRepository.updateFavorite(context, kural)
+            //(statusCode>0) refers db update status, (kural.favourite == 1) referes add/remove process
+            val res = arrayOf(statusCode > 0, kural.favourite == 1)
+            favStatusLiveData_.value = res
+        }
     }
 
-    fun onFavClick() {
-        favClickLiveData_.value = true
-    }
+fun onFavClick() {
+    favClickLiveData_.value = true
+}
 
-    fun updateFavToolBarIcon(visible: Boolean) {
-        favUpdateTBIconLiveData_.value = visible
-    }
+fun updateFavToolBarIcon(visible: Boolean) {
+    favUpdateTBIconLiveData_.value = visible
+}
 
-    suspend fun getKuralDetail(context: Context, number: Int): LiveData<Kural> {
-        return mainRepository.getKuralDetail(context, number)
-    }
+suspend fun getKuralDetail(context: Context, number: Int): LiveData<Kural> {
+    return mainRepository.getKuralDetail(context, number)
+}
 
-    fun observeNotificationChanges() {
-        notificationLiveData_.value = true
-    }
+fun observeNotificationChanges() {
+    notificationLiveData_.value = true
+}
 
-    fun updateNotificationStatus(context: Context): Boolean{
-        val prefs = NotificationPreference.getInstance(context)
-        prefs.isDailyNotifyValue = !prefs.isDailyNotifyValue
-        return prefs.isDailyNotifyValue
-    }
+fun updateNotificationStatus(context: Context): Boolean {
+    val prefs = NotificationPreference.getInstance(context)
+    prefs.isDailyNotifyValue = !prefs.isDailyNotifyValue
+    return prefs.isDailyNotifyValue
+}
 
-    fun getSettingsData(context: Context): List<Setting> {
-        return mainRepository.getSettingsData(context)
-    }
+fun getSettingsData(context: Context): List<Setting> {
+    return mainRepository.getSettingsData(context)
+}
 
-    fun notificationUpdateUI(){
-        notificationRefreshUILiveData_.value = true
-    }
+fun notificationUpdateUI() {
+    notificationRefreshUILiveData_.value = true
+}
 
-    fun isMatchesFound(searchText: String, kural: Kural?): Boolean {
-        return matchTranslation(searchText, kural) || matchTamilTranslation(searchText, kural) ||
-                matchMk(searchText, kural) || matchMv(searchText, kural) ||
-                matchSp(searchText, kural) || matchExplanation(searchText, kural) ||
-                matchCouplet(searchText, kural) || matchKuralNo(searchText, kural)
-    }
+fun isMatchesFound(searchText: String, kural: Kural?): Boolean {
+    return matchTranslation(searchText, kural) || matchTamilTranslation(
+        searchText,
+        kural
+    ) || matchMk(searchText, kural) || matchMv(searchText, kural) || matchSp(
+        searchText,
+        kural
+    ) || matchExplanation(searchText, kural) || matchCouplet(searchText, kural) || matchKuralNo(
+        searchText,
+        kural
+    )
+}
 
-    private fun matchKuralNo(searchText: String, kural: Kural?): Boolean {
-        return kural?.number.toString() == searchText
-    }
+private fun matchKuralNo(searchText: String, kural: Kural?): Boolean {
+    return kural?.number.toString() == searchText
+}
 
-    private fun matchCouplet(searchText: String, kural: Kural?): Boolean {
-        return kural?.couplet?.contains(searchText) ?: false
-    }
+private fun matchCouplet(searchText: String, kural: Kural?): Boolean {
+    return kural?.couplet?.contains(searchText) ?: false
+}
 
-    private fun matchExplanation(searchText: String, kural: Kural?): Boolean {
-        return kural?.explanation?.contains(searchText) ?: false
-    }
+private fun matchExplanation(searchText: String, kural: Kural?): Boolean {
+    return kural?.explanation?.contains(searchText) ?: false
+}
 
-    private fun matchSp(searchText: String, kural: Kural?): Boolean {
-        return kural?.sp?.lowercase(Locale.getDefault())?.contains(searchText) ?: false
-    }
+private fun matchSp(searchText: String, kural: Kural?): Boolean {
+    return kural?.sp?.lowercase(Locale.getDefault())?.contains(searchText) ?: false
+}
 
-    private fun matchMv(searchText: String, kural: Kural?): Boolean {
-        return kural?.mv?.lowercase(Locale.getDefault())?.contains(searchText) ?: false
-    }
+private fun matchMv(searchText: String, kural: Kural?): Boolean {
+    return kural?.mv?.lowercase(Locale.getDefault())?.contains(searchText) ?: false
+}
 
-    private fun matchMk(searchText: String, kural: Kural?): Boolean {
-        return kural?.mk?.lowercase(Locale.getDefault())?.contains(searchText) ?: false
-    }
+private fun matchMk(searchText: String, kural: Kural?): Boolean {
+    return kural?.mk?.lowercase(Locale.getDefault())?.contains(searchText) ?: false
+}
 
-    private fun matchTamilTranslation(searchText: String, kural: Kural?): Boolean {
-        return kural?.tamilTranslation?.lowercase(Locale.getDefault())?.contains(searchText)
-            ?: false
-    }
+private fun matchTamilTranslation(searchText: String, kural: Kural?): Boolean {
+    return kural?.tamilTranslation?.lowercase(Locale.getDefault())?.contains(searchText) ?: false
+}
 
-    private fun matchTranslation(searchText: String, kural: Kural?): Boolean {
-        return kural?.translation?.lowercase(Locale.getDefault())?.contains(searchText) ?: false
-    }
+private fun matchTranslation(searchText: String, kural: Kural?): Boolean {
+    return kural?.translation?.lowercase(Locale.getDefault())?.contains(searchText) ?: false
+}
 }

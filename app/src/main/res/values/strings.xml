@@ -25,6 +25,11 @@
     <string name="kurals">குறள்கள்</string>
     <string name="kural_explanation">குறள் விளக்கம்</string>
     <string name="wait">காத்திருக்கவும்</string>
+
+    <!--Kural Not Found, Please search with valid word or number-->
+    <string name="kural_not_found">குறள் கிடைக்கவில்லை, சரியான வார்த்தை அல்லது எண்ணைக் கொண்டு தேடவும்.</string>
+    <string name="no_favorite_found">பிடித்தவைகளில் இதுவரை குறள் எதுவும் சேர்க்கப்படவில்லை! குறள் பட்டியலிலிருந்து பிடித்ததைச் சேர்க்கவும்.</string>
+
     <string name="notification_tuned_on">Notification turned ON</string>
     <string name="notification_tuned_off">Notification turned OFF</string>
     <string name="added_to_favorites">Successfully, Added to favorites</string>
@@ -35,9 +40,6 @@
     <string name="kural_no_eng">Kural No-%d</string>
     <string name="explanation">Explanation:</string>
     <string name="couplet">Couplet:</string>
-    <!--Kural Not Found, Please search with valid word or number-->
-    <string name="kural_not_found">குறள் கிடைக்கவில்லை, சரியான வார்த்தை அல்லது எண்ணைக் கொண்டு தேடவும்.</string>
-    <string name="no_favorite_found">பிடித்தவைகளில் இதுவரை குறள் எதுவும் சேர்க்கப்படவில்லை! குறள் பட்டியலிலிருந்து பிடித்ததைச் சேர்க்கவும்.</string>
 
     <string name="permission_required">Permission Required!</string>
     <string name="permission_required_desc">This app has feature to send daily one kural notification, Please enable notification permission in device settings.</string>
@@ -47,4 +49,13 @@
     <string name="notification_granted_info">Permission granted for sending daily one kural notification.</string>
 
     <string name="ad_unit_id">ca-app-pub-8676882032589738/5807664758</string>
+
+    <!--ACCESSIBILITY-->
+    <string name="back">Back</string>
+    <string name="add_favorite">Add Favorite</string>
+    <string name="remove_favorite">Add Favorite</string>
+    <string name="home">Home</string>
+    <string name="acc_search">Search</string>
+    <string name="acc_favorties">Favorites</string>
+    <string name="acc_settings">Settings</string>
 </resources>

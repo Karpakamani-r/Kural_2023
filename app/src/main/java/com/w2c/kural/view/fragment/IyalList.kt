@@ -13,6 +13,7 @@ import androidx.navigation.fragment.navArgs
 import com.w2c.kural.R
 import com.w2c.kural.adapter.AthikaramAdapter
 import com.w2c.kural.databinding.FragmentIyalListBinding
+import com.w2c.kural.utils.AdapterActions
 import com.w2c.kural.utils.AthikaramClickListener
 import com.w2c.kural.utils.ScreenTypes
 import com.w2c.kural.view.activity.MainActivity
@@ -23,7 +24,9 @@ import kotlinx.coroutines.launch
 
 
 class IyalList : Fragment(), AthikaramClickListener {
-    private lateinit var binding: FragmentIyalListBinding
+    private var binding_: FragmentIyalListBinding? = null
+    private val binding get() = binding_!!
+
     private lateinit var viewmodel: MainActivityViewModel
     private lateinit var list: List<String>
 
@@ -33,7 +36,7 @@ class IyalList : Fragment(), AthikaramClickListener {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentIyalListBinding.inflate(inflater)
+        binding_ = FragmentIyalListBinding.inflate(inflater)
         viewmodel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
         loadData()
         return binding.root
@@ -48,11 +51,15 @@ class IyalList : Fragment(), AthikaramClickListener {
             viewmodel.getIyalByPaal(requireActivity(), paal).observe(viewLifecycleOwner) {
                 it?.let {
                     list = it
-                    val adapter = AthikaramAdapter(title, list, this@IyalList)
+                    val adapter = AthikaramAdapter(title, list, getCallBack)
                     binding.rvIyal.adapter = adapter
                 }
             }
         }
+    }
+
+    private val getCallBack = { pos: Int, action: AdapterActions ->
+        onItemClick(pos)
     }
 
     private fun getExceptionHandler(): CoroutineExceptionHandler {
@@ -72,5 +79,10 @@ class IyalList : Fragment(), AthikaramClickListener {
             iyal = item
         )
         findNavController().navigate(kuralList)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding_=null
     }
 }

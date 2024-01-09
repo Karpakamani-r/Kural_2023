@@ -26,7 +26,9 @@ import java.util.concurrent.Executors
 import com.w2c.kural.databinding.FragmentKuralDetailsBinding
 
 class KuralDetails : Fragment() {
-    private lateinit var kuralBinding: FragmentKuralDetailsBinding
+    private var kuralBinding_: FragmentKuralDetailsBinding? = null
+    private val kuralBinding get() = kuralBinding_!!
+
     private lateinit var viewModel: MainActivityViewModel
     private lateinit var kural: Kural
 
@@ -35,7 +37,7 @@ class KuralDetails : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        kuralBinding = FragmentKuralDetailsBinding.inflate(LayoutInflater.from(requireActivity()))
+        kuralBinding_ = FragmentKuralDetailsBinding.inflate(LayoutInflater.from(requireActivity()))
         kuralBinding.parentLayout.hide()
         viewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
         setUpAd()
@@ -79,6 +81,7 @@ class KuralDetails : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         removeAdView()
+        kuralBinding_ = null
     }
 
     private fun removeAdView() {

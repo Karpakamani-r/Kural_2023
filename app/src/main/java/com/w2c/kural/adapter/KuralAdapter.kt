@@ -15,12 +15,13 @@ import com.w2c.kural.adapter.KuralAdapter.KuralViewHolder
 import com.w2c.kural.database.DatabaseController
 import com.w2c.kural.database.Kural
 import com.w2c.kural.databinding.ListItemKuralBinding
+import com.w2c.kural.utils.AdapterActions
 import com.w2c.kural.utils.OnItemClickListener
 import com.zerobranch.layout.SwipeLayout
 import java.util.concurrent.Executors
 
 
-class KuralAdapter(private val kuralList: List<Kural>, private val callback: OnItemClickListener) :
+class KuralAdapter(private val kuralList: List<Kural>,private val callback: (pos: Int, action: AdapterActions) -> Unit) :
     RecyclerView.Adapter<KuralViewHolder>() {
     private var isFromFavourite = false
     fun setFromFavourite() {
@@ -46,10 +47,10 @@ class KuralAdapter(private val kuralList: List<Kural>, private val callback: OnI
         RecyclerView.ViewHolder(kuralListBinding.root) {
         init {
             kuralListBinding.constraintLayout.setOnClickListener {
-                callback.onItemClick(adapterPosition)
+                callback(layoutPosition, AdapterActions.ITEM_CLICK)
             }
             kuralListBinding.swipeItem.setOnClickListener {
-                callback.onManageFavorite(adapterPosition)
+                callback(layoutPosition, AdapterActions.MANAGE_FAVORITE)
             }
         }
     }

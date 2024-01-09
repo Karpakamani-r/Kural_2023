@@ -19,9 +19,12 @@ import com.w2c.kural.viewmodel.MainActivityViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.w2c.kural.R
+import com.w2c.kural.utils.AdapterActions
 
-class Favourites : Fragment(), OnItemClickListener {
-    private lateinit var binding: FragmentFavouriteBinding
+class Favourites : Fragment() {
+    private var binding_: FragmentFavouriteBinding? = null
+    private val binding get() = binding_!!
+
     private lateinit var viewModel: MainActivityViewModel
     private var favAdapter: KuralAdapter? = null
     private var favourites: MutableList<Kural> = mutableListOf()
@@ -30,7 +33,7 @@ class Favourites : Fragment(), OnItemClickListener {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this
-        binding = FragmentFavouriteBinding.inflate(inflater)
+        binding_ = FragmentFavouriteBinding.inflate(inflater)
         viewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
         fetchFavorites()
         return binding.root
@@ -60,18 +63,23 @@ class Favourites : Fragment(), OnItemClickListener {
 
     private fun setupAdapter() {
         binding.rvFavourite.layoutManager = LinearLayoutManager(requireActivity())
-        favAdapter = KuralAdapter(favourites, this)
+        favAdapter = KuralAdapter(favourites, getCallBack)
         favAdapter?.setFromFavourite()
         binding.rvFavourite.adapter = favAdapter
     }
 
-    override fun onItemClick(position: Int) {
+    private val getCallBack = { pos: Int, action: AdapterActions ->
+        if(action==AdapterActions.ITEM_CLICK) onItemClick(pos)
+        else onManageFavorite(pos)
+    }
+
+    private fun onItemClick(position: Int) {
         val kuralNumber = favourites[position].number
         val kuralDetailDirection = FavouritesDirections.actionFavouriteToKuralDetails(kuralNumber)
         findNavController().navigate(kuralDetailDirection)
     }
 
-    override fun onManageFavorite(position: Int) {
+    private fun onManageFavorite(position: Int) {
         lifecycleScope.launch(Dispatchers.Main) {
             val kural = favourites[position].apply {
                 favourite = 0
@@ -79,5 +87,10 @@ class Favourites : Fragment(), OnItemClickListener {
             favAdapter?.notifyItemChanged(position, kural)
             viewModel.manageFavorite(requireActivity(), kural)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding_ = null
     }
 }

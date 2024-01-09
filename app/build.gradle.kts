@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("androidx.navigation.safeargs.kotlin")
+    id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
 }
 
@@ -80,8 +81,9 @@ dependencies {
     implementation("com.github.zerobranch:SwipeLayout:1.3.1")
 
     //Firebase Crashlytics
-    implementation("com.google.firebase:firebase-crashlytics:18.6.0")
-    implementation("com.google.firebase:firebase-analytics:21.5.0")
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation("com.google.firebase:firebase-crashlytics")
+    implementation("com.google.firebase:firebase-analytics")
 
     //LeakCanary
     debugImplementation ("com.squareup.leakcanary:leakcanary-android:2.13")

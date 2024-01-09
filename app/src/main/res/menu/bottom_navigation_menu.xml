@@ -3,14 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/paalFragment"
-        android:icon="@drawable/ic_home" />
+        android:icon="@drawable/ic_home"
+        android:title="@string/home" />
     <item
         android:id="@+id/home"
-        android:icon="@drawable/ic_search" />
+        android:icon="@drawable/ic_search"
+        android:title="@string/acc_search" />
     <item
         android:id="@+id/favourite"
-        android:icon="@drawable/ic_favorites" />
+        android:icon="@drawable/ic_favorites"
+        android:title="@string/acc_favorties" />
     <item
         android:id="@+id/setting"
-        android:icon="@drawable/ic_settings" />
+        android:icon="@drawable/ic_settings"
+        android:title="@string/acc_settings" />
 </menu>

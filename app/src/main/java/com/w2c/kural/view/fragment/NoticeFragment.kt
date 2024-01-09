@@ -12,12 +12,13 @@ import com.w2c.kural.utils.NOTIFICATION_REQ_CODE
 import com.w2c.kural.utils.POST_NOTIFICATIONS
 
 class NoticeFragment : DialogFragment() {
-    private lateinit var binding: FragmentNotificationEducationBinding
+    private var binding_: FragmentNotificationEducationBinding? = null
+    private val binding get() = binding_!!
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentNotificationEducationBinding.inflate(inflater)
+        binding_ = FragmentNotificationEducationBinding.inflate(inflater)
         initView()
         return binding.root
     }
@@ -34,5 +35,10 @@ class NoticeFragment : DialogFragment() {
                 NOTIFICATION_REQ_CODE
             )
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.unbind()
     }
 }

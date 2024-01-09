@@ -6,15 +6,20 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.w2c.kural.databinding.ListItemChapterBinding
 import com.w2c.kural.model.Chapter
+import com.w2c.kural.utils.AdapterActions
 import com.w2c.kural.utils.AthikaramClickListener
 
-class AthikaramAdapter(val tag: String, val list: List<String>, val listener: AthikaramClickListener) :
+class AthikaramAdapter(
+    private val tag: String,
+    private val list: List<String>,
+    private val callback: (pos: Int, action: AdapterActions) -> Unit
+) :
     RecyclerView.Adapter<AthikaramAdapter.AthikaramViewHolder>() {
-    class AthikaramViewHolder(val binding: ListItemChapterBinding, val listener: AthikaramClickListener) :
+    inner class AthikaramViewHolder(val binding: ListItemChapterBinding) :
         RecyclerView.ViewHolder(binding.root) {
         init {
             binding.root.setOnClickListener {
-                listener.onItemClick(adapterPosition)
+                callback(layoutPosition, AdapterActions.ITEM_CLICK)
             }
         }
     }
@@ -25,9 +30,7 @@ class AthikaramAdapter(val tag: String, val list: List<String>, val listener: At
     ): AthikaramViewHolder {
         val binding =
             ListItemChapterBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return AthikaramViewHolder(
-            binding, listener
-        )
+        return AthikaramViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: AthikaramAdapter.AthikaramViewHolder, position: Int) {

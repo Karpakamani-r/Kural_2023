@@ -144,7 +144,7 @@ class MainActivityViewModel(private val mainRepository: MainRepository) :
         return mainRepository.getKuralDetail(context, number)
     }
 
-    fun observeNotificationChanges(context: Context) {
+    fun observeNotificationChanges() {
         notificationLiveData_.value = true
     }
 

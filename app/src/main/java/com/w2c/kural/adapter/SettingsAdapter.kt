@@ -16,13 +16,14 @@ import com.w2c.kural.adapter.SettingsAdapter.SettingsViewHolder
 import com.w2c.kural.databinding.ListItemSettingsBinding
 import com.w2c.kural.model.Setting
 import com.w2c.kural.notificationwork.NotificationWork
+import com.w2c.kural.utils.AdapterActions
 import com.w2c.kural.utils.NotificationPreference
 import com.w2c.kural.utils.OnItemClickListener
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class SettingsAdapter(private val callback: OnItemClickListener, private val mList: List<Setting>) :
+class SettingsAdapter(private val callback: (pos: Int, action: AdapterActions) -> Unit, private val mList: List<Setting>) :
     RecyclerView.Adapter<SettingsViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SettingsViewHolder {
@@ -59,9 +60,7 @@ class SettingsAdapter(private val callback: OnItemClickListener, private val mLi
 
         init {
             settingsBinding.root.setOnClickListener {
-                callback.let {
-                    callback.onItemClick(adapterPosition)
-                }
+                callback(adapterPosition, AdapterActions.ITEM_CLICK)
             }
         }
     }

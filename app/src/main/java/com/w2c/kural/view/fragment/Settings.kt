@@ -26,15 +26,16 @@ import com.w2c.kural.R
 import com.w2c.kural.model.Setting
 import com.w2c.kural.viewmodel.MainActivityViewModel
 
-class Settings : Fragment(), OnItemClickListener {
-    private lateinit var settingsBinding: FragmentSettingsBinding
+class Settings : Fragment() {
+    private var settingsBinding_: FragmentSettingsBinding? = null
+    private val settingsBinding get() = settingsBinding_!!
     private lateinit var adapter: SettingsAdapter
     private lateinit var viewModel: MainActivityViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        settingsBinding = FragmentSettingsBinding.inflate(inflater)
+        settingsBinding_ = FragmentSettingsBinding.inflate(inflater)
         setUpAd()
         loadSettingsData()
         observeUIUpdate()
@@ -51,8 +52,12 @@ class Settings : Fragment(), OnItemClickListener {
         viewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
         val data = viewModel.getSettingsData(requireActivity())
         settingsBinding.rvSettings.layoutManager = LinearLayoutManager(requireActivity())
-        adapter = SettingsAdapter(this, data)
+        adapter = SettingsAdapter(getCallBack, data)
         settingsBinding.rvSettings.adapter = adapter
+    }
+
+    private val getCallBack = { pos: Int, action: AdapterActions ->
+        onItemClick(pos)
     }
 
     private fun observeUIUpdate() {
@@ -61,10 +66,10 @@ class Settings : Fragment(), OnItemClickListener {
         }
     }
 
-    override fun onItemClick(position: Int) {
+    private fun onItemClick(position: Int) {
         when (position) {
             0 -> {
-                updateNotificationStatus()
+                viewModel.observeNotificationChanges()
             }
 
             1 -> {
@@ -79,10 +84,6 @@ class Settings : Fragment(), OnItemClickListener {
                 navigateToShareAppIntent()
             }
         }
-    }
-
-    private fun updateNotificationStatus() {
-        viewModel.observeNotificationChanges(requireActivity())
     }
 
     private fun navigateToMailIntent() {
@@ -125,13 +126,10 @@ class Settings : Fragment(), OnItemClickListener {
         startActivity(Intent.createChooser(shareAppIntent, SHARE_VIA))
     }
 
-    override fun onManageFavorite(position: Int) {
-        //Needs to handle, If required
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         removeAdView()
+        settingsBinding_ = null
     }
 
     private fun removeAdView() {

@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.w2c.kural.adapter.KuralAdapter
 import com.w2c.kural.database.Kural
 import com.w2c.kural.databinding.KuralListBinding
+import com.w2c.kural.utils.AdapterActions
 import com.w2c.kural.utils.Progress
 import com.w2c.kural.utils.ScreenTypes
 import com.w2c.kural.utils.hide
@@ -28,8 +29,10 @@ import com.w2c.kural.utils.OnItemClickListener
 import com.w2c.kural.viewmodel.MainActivityViewModel
 import kotlinx.coroutines.*
 
-class KuralList : Fragment(), OnItemClickListener {
-    private lateinit var binding: KuralListBinding
+class KuralList : Fragment() {
+    private var binding_: KuralListBinding? = null
+    private val binding get() = binding_!!
+
     private var kuralAdapter: KuralAdapter? = null
     private var mKuralList: MutableList<Kural> = mutableListOf()
     private val mKuralListOriginal: MutableList<Kural> = mutableListOf()
@@ -63,7 +66,7 @@ class KuralList : Fragment(), OnItemClickListener {
     }
 
     private fun initView() {
-        binding = KuralListBinding.inflate(LayoutInflater.from(requireActivity()))
+        binding_ = KuralListBinding.inflate(LayoutInflater.from(requireActivity()))
         mProgress = Progress.getInstance(requireActivity())
         binding.rvKuralList.layoutManager = LinearLayoutManager(requireActivity())
         viewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
@@ -175,17 +178,22 @@ class KuralList : Fragment(), OnItemClickListener {
         mKuralListOriginal.addAll(data)
         mKuralList.clear()
         mKuralList.addAll(data)
-        kuralAdapter = KuralAdapter(mKuralList, this)
+        kuralAdapter = KuralAdapter(mKuralList, getCallBack)
         binding.rvKuralList.adapter = kuralAdapter
     }
 
-    override fun onItemClick(position: Int) {
+    private val getCallBack = { pos: Int, action: AdapterActions ->
+        if (action == AdapterActions.ITEM_CLICK) onItemClick(pos)
+        else onManageFavorite(pos)
+    }
+
+    private fun onItemClick(position: Int) {
         val kuralNumber = mKuralList[position].number
         val kuralDetailDirection = KuralListDirections.actionHomeToKuralDetails(kuralNumber)
         findNavController().navigate(kuralDetailDirection)
     }
 
-    override fun onManageFavorite(position: Int) {
+    private fun onManageFavorite(position: Int) {
         lifecycleScope.launch(Dispatchers.Main) {
             val kural = mKuralList[position].apply {
                 favourite = if (favourite == 0) 1 else 0
@@ -200,5 +208,6 @@ class KuralList : Fragment(), OnItemClickListener {
         if (::runnable.isInitialized && handler.hasCallbacks(runnable)) {
             handler.removeCallbacks(runnable)
         }
+        binding_ = null
     }
 }

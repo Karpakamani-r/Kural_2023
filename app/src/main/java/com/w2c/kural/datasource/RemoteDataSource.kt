@@ -13,7 +13,6 @@ class RemoteDataSource :
         } catch (e: Exception) {
             throw Exception(e)
         }
-        return emptyList()
     }
 
     override suspend fun getFavourites(context: Context): List<Kural> {

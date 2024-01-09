@@ -14,6 +14,7 @@ import androidx.navigation.fragment.navArgs
 import com.w2c.kural.R
 import com.w2c.kural.adapter.AthikaramAdapter
 import com.w2c.kural.databinding.FragmentAthikaramListBinding
+import com.w2c.kural.utils.AdapterActions
 import com.w2c.kural.utils.AthikaramClickListener
 import com.w2c.kural.utils.ScreenTypes
 import com.w2c.kural.view.activity.MainActivity
@@ -24,7 +25,9 @@ import kotlinx.coroutines.launch
 
 class AthikaramList : Fragment(), AthikaramClickListener {
 
-    private lateinit var binding: FragmentAthikaramListBinding
+    private var binding_: FragmentAthikaramListBinding? = null
+    private val binding get() = binding_!!
+
     private lateinit var viewmodel: MainActivityViewModel
     private lateinit var list: List<String>
     override fun onCreateView(
@@ -32,7 +35,7 @@ class AthikaramList : Fragment(), AthikaramClickListener {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        binding = FragmentAthikaramListBinding.inflate(inflater)
+        binding_ = FragmentAthikaramListBinding.inflate(inflater)
         viewmodel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
         loadData()
         return binding.root
@@ -48,11 +51,15 @@ class AthikaramList : Fragment(), AthikaramClickListener {
             viewmodel.getAthikaramByPaal(requireActivity(), paal, iyal).observe(viewLifecycleOwner) {
                 it?.let {
                     list = it
-                    val adapter = AthikaramAdapter(title, it, this@AthikaramList)
+                    val adapter = AthikaramAdapter(title, it, getCallBack)
                     binding.rvChapter.adapter = adapter
                 }
             }
         }
+    }
+
+    private val getCallBack = { pos: Int, action: AdapterActions ->
+        onItemClick(pos)
     }
 
     private fun getExceptionHandler(): CoroutineExceptionHandler {
@@ -77,6 +84,11 @@ class AthikaramList : Fragment(), AthikaramClickListener {
             iyal = args.iyal
         )
         findNavController().navigate(kuralList)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding_=null
     }
 
 }

@@ -15,8 +15,10 @@ class AthikaramAdapter(
     private val callback: (pos: Int, action: AdapterActions) -> Unit
 ) :
     RecyclerView.Adapter<AthikaramAdapter.AthikaramViewHolder>() {
-    inner class AthikaramViewHolder(val binding: ListItemChapterBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    class AthikaramViewHolder(
+        val binding: ListItemChapterBinding,
+        val callback: (pos: Int, action: AdapterActions) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
         init {
             binding.root.setOnClickListener {
                 callback(layoutPosition, AdapterActions.ITEM_CLICK)
@@ -30,7 +32,7 @@ class AthikaramAdapter(
     ): AthikaramViewHolder {
         val binding =
             ListItemChapterBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return AthikaramViewHolder(binding)
+        return AthikaramViewHolder(binding, callback)
     }
 
     override fun onBindViewHolder(holder: AthikaramAdapter.AthikaramViewHolder, position: Int) {

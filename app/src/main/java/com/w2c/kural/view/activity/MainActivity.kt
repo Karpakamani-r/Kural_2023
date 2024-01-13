@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var firstTime = true
     private val topLevelDestinations = setOf(
-        R.id.paalFragment, R.id.home, R.id.favourite, R.id.setting
+        R.id.paalFragment, R.id.home, R.id.favourite, R.id.setting, R.id.progressDialogFragment
     )
     private var favorite = false
     private var isInSettings = false

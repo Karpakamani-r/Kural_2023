@@ -181,9 +181,14 @@ class KuralList : Fragment() {
     }
 
     private fun onItemClick(position: Int) {
+        val controller = findNavController()
         val kuralNumber = mKuralList[position].number
         val kuralDetailDirection = KuralListDirections.actionHomeToKuralDetails(kuralNumber)
-        findNavController().navigate(kuralDetailDirection)
+        //Illegal Arguments Crash fix
+        //Navigation destination cannot be found from the current destination
+        if (controller.currentDestination?.id != kuralDetailDirection.actionId) {
+            controller.navigate(kuralDetailDirection)
+        }
     }
 
     private fun onManageFavorite(position: Int) {
@@ -197,6 +202,7 @@ class KuralList : Fragment() {
     }
 
     override fun onDestroyView() {
+        binding.rvKuralList.adapter = null
         super.onDestroyView()
         if (::runnable.isInitialized && handler.hasCallbacks(runnable)) {
             handler.removeCallbacks(runnable)

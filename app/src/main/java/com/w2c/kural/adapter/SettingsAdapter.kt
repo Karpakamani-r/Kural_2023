@@ -29,7 +29,7 @@ class SettingsAdapter(private val callback: (pos: Int, action: AdapterActions) -
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SettingsViewHolder {
         val settings =
             ListItemSettingsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return SettingsViewHolder(settings)
+        return SettingsViewHolder(settings, callback)
     }
 
     override fun onBindViewHolder(holder: SettingsViewHolder, position: Int) {
@@ -53,7 +53,10 @@ class SettingsAdapter(private val callback: (pos: Int, action: AdapterActions) -
         return mList.size
     }
 
-    inner class SettingsViewHolder(var settingsBinding: ListItemSettingsBinding) :
+    class SettingsViewHolder(
+        val settingsBinding: ListItemSettingsBinding,
+        val callback: (pos: Int, action: AdapterActions) -> Unit
+    ) :
         RecyclerView.ViewHolder(
             settingsBinding.root
         ) {

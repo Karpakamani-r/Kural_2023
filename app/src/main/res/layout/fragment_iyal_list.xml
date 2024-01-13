@@ -12,7 +12,7 @@
             android:id="@+id/rvIyal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fadingEdgeLength="50dp"
+            android:fadingEdgeLength="20dp"
             android:requiresFadingEdge="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/list_item_chapter" />

@@ -14,7 +14,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fadingEdgeLength="50dp"
+        android:fadingEdgeLength="20dp"
         android:requiresFadingEdge="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,8 +29,9 @@
                 android:layout_height="wrap_content"
                 android:text="@{String.format(@string/kural_no,kural.number)}"
                 android:textColor="@color/primary"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
+                android:layout_marginTop="6dp"
                 app:layout_constraintStart_toStartOf="@+id/guideline4"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -88,7 +89,7 @@
                 android:gravity="start"
                 android:maxLines="1"
                 android:text="@{kural.transliteration1}"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 app:autoSizeTextType="uniform"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline4"
@@ -104,7 +105,7 @@
                 android:gravity="start"
                 android:maxLines="1"
                 android:text="@{kural.transliteration2}"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 app:autoSizeTextType="uniform"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline4"
@@ -118,7 +119,7 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/mv_urai"
                 android:textColor="@color/primary"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline4"
@@ -143,7 +144,7 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/sp_urai"
                 android:textColor="@color/primary"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline4"
@@ -168,7 +169,7 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/mk_urai"
                 android:textColor="@color/primary"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline4"
@@ -205,7 +206,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:text="@{kural.explanation}"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline4"
                 app:layout_constraintTop_toBottomOf="@+id/tvexpTitle"
@@ -230,7 +231,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:text="@{kural.couplet}"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline4"
                 app:layout_constraintTop_toBottomOf="@+id/tvCuptTitle"
@@ -251,7 +252,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_begin="10dp" />
+                app:layout_constraintGuide_begin="5dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

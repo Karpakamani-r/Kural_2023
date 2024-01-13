@@ -114,9 +114,14 @@
     <dialog
         android:id="@+id/notificationEducationFragment"
         android:name="com.w2c.kural.view.fragment.NoticeFragment"
-        android:label="NotificationEducationFragment" />
+        android:label="NotificationEducationFragment">
+        <action
+            android:id="@+id/action_notificationEducationFragment_pop"
+            app:popUpTo="@id/notificationEducationFragment"
+            app:popUpToInclusive="true" />
+    </dialog>
     <dialog
         android:id="@+id/progressDialogFragment"
         android:name="com.w2c.kural.view.fragment.ProgressDialogFragment"
-        android:label="ProgressDialogFragment" />
+        android:label="" />
 </navigation>

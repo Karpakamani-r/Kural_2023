@@ -21,7 +21,10 @@ import com.zerobranch.layout.SwipeLayout
 import java.util.concurrent.Executors
 
 
-class KuralAdapter(private val kuralList: List<Kural>,private val callback: (pos: Int, action: AdapterActions) -> Unit) :
+class KuralAdapter(
+    private val kuralList: List<Kural>,
+    private val callback: (pos: Int, action: AdapterActions) -> Unit
+) :
     RecyclerView.Adapter<KuralViewHolder>() {
     private var isFromFavourite = false
     fun setFromFavourite() {
@@ -31,7 +34,7 @@ class KuralAdapter(private val kuralList: List<Kural>,private val callback: (pos
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): KuralViewHolder {
         val listBinding =
             ListItemKuralBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return KuralViewHolder(listBinding)
+        return KuralViewHolder(listBinding, callback)
     }
 
     override fun onBindViewHolder(holder: KuralViewHolder, position: Int) {
@@ -43,7 +46,8 @@ class KuralAdapter(private val kuralList: List<Kural>,private val callback: (pos
         return kuralList.size
     }
 
-    inner class KuralViewHolder(var kuralListBinding: ListItemKuralBinding) :
+    class KuralViewHolder(val kuralListBinding: ListItemKuralBinding,
+                          val callback: (pos: Int, action: AdapterActions) -> Unit) :
         RecyclerView.ViewHolder(kuralListBinding.root) {
         init {
             kuralListBinding.constraintLayout.setOnClickListener {

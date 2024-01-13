@@ -1,6 +1,7 @@
 package com.w2c.kural.view.fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -80,21 +81,22 @@ class PaalList : Fragment() {
     }
 
     private fun loadData() {
-        lifecycleScope.launch {
+        val scope = viewLifecycleOwner.lifecycleScope
+        scope.launch {
             supervisorScope {
-                val arathuppaalAsync = lifecycleScope.async {
+                val arathuppaalAsync = scope.async {
                     mainActivityViewModel.getHomeCardData(
                         requireActivity(),
                         getString(R.string.arathuppaal)
                     )
                 }
-                val porutpaalAsync = lifecycleScope.async {
+                val porutpaalAsync = scope.async {
                     mainActivityViewModel.getHomeCardData(
                         requireActivity(),
                         getString(R.string.porutpaal)
                     )
                 }
-                val kamathuppaalAsync = lifecycleScope.async {
+                val kamathuppaalAsync = scope.async {
                     mainActivityViewModel.getHomeCardData(
                         requireActivity(),
                         getString(R.string.kamathuppaal)

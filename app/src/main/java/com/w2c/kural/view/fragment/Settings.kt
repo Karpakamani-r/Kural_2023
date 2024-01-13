@@ -127,6 +127,7 @@ class Settings : Fragment() {
     }
 
     override fun onDestroyView() {
+        settingsBinding.rvSettings.adapter = null
         super.onDestroyView()
         removeAdView()
         settingsBinding_ = null

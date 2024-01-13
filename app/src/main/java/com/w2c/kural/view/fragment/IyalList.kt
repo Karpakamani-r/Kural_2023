@@ -82,6 +82,7 @@ class IyalList : Fragment(), AthikaramClickListener {
     }
 
     override fun onDestroyView() {
+        binding.rvIyal.adapter = null
         super.onDestroyView()
         binding_=null
     }

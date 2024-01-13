@@ -87,6 +87,7 @@ class AthikaramList : Fragment(), AthikaramClickListener {
     }
 
     override fun onDestroyView() {
+        binding.rvChapter.adapter = null
         super.onDestroyView()
         binding_=null
     }

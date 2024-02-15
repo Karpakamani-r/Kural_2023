@@ -12,30 +12,33 @@
 
         <include
             android:id="@+id/incLayArathuppaal"
-            layout="@layout/widget_paal"
+            layout="@layout/widget_paal_new"
             app:athikaram="@{@string/athikarams}"
             app:image="@{@drawable/wellness}"
             app:iyal="@{@string/iyals}"
             app:kural="@{@string/kurals}"
-            app:paal="@{@string/arathuppaal}" />
+            app:paal="@{@string/arathuppaal}"
+            app:desc="@{@string/arathuppaal_desc}" />
 
         <include
             android:id="@+id/incLayPorutpaal"
-            layout="@layout/widget_paal"
+            layout="@layout/widget_paal_new"
             app:athikaram="@{@string/athikarams}"
             app:image="@{@drawable/treasure}"
             app:iyal="@{@string/iyals}"
             app:kural="@{@string/kurals}"
-            app:paal="@{@string/porutpaal}" />
+            app:paal="@{@string/porutpaal}"
+            app:desc="@{@string/porutpaal_desc}"/>
 
         <include
             android:id="@+id/incLayKamathuppaal"
-            layout="@layout/widget_paal"
+            layout="@layout/widget_paal_new"
             app:athikaram="@{@string/athikarams}"
             app:image="@{@drawable/ballons_heart}"
             app:iyal="@{@string/iyals}"
             app:kural="@{@string/kurals}"
-            app:paal="@{@string/kamathuppaal}" />
+            app:paal="@{@string/kamathuppaal}"
+            app:desc="@{@string/kamathuppaal_desc}"/>
 
         <com.google.android.gms.ads.AdView
             android:id="@+id/adView"

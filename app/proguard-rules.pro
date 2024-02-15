@@ -19,3 +19,8 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep class com.w2c.kural.model.Chapter{*;}
+-keep class com.w2c.kural.model.Setting{*;}
+-keep class com.w2c.kural.database.Kural{*;}
+-keep class com.w2c.kural.retrofit.KuralResponse{*;}

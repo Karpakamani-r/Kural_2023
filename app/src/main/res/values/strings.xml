@@ -25,6 +25,9 @@
     <string name="kurals">குறள்கள்</string>
     <string name="kural_explanation">குறள் விளக்கம்</string>
     <string name="wait">காத்திருக்கவும்</string>
+    <string name="arathuppaal_desc">(நல்வழி, ஒழுங்கு, தருமத்தைப்பற்றிக் கூறுவதுமான பகுதி)</string>
+    <string name="porutpaal_desc">(இவ்வுலகத்தில் உள்ள பொருட்களைப்பற்றிக் கூறுவதுமான பகுதி)</string>
+    <string name="kamathuppaal_desc">(அன்பு, அறம், பொருள், வீடு என்ற வாழ்வின் நோக்கங்கள் பற்றிய கருத்துக்களை்பற்றிக் கூறுவதுமான பகுதி)</string>
 
     <!--Kural Not Found, Please search with valid word or number-->
     <string name="kural_not_found">குறள் கிடைக்கவில்லை, சரியான வார்த்தை அல்லது எண்ணைக் கொண்டு தேடவும்.</string>

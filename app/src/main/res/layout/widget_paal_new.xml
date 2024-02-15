@@ -41,12 +41,13 @@
             android:layout_margin="16dp"
             app:cardBackgroundColor="@color/cardBackgroundColor"
             app:cardCornerRadius="6dp"
-            app:cardElevation="6dp"
+            app:cardElevation="3dp"
             android:outlineAmbientShadowColor="@color/primary"
             android:outlineSpotShadowColor="@color/primary"
             app:layout_constraintBottom_toTopOf="@+id/guideline"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="UnusedAttribute">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -86,6 +87,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/yellow_tv_selector"
                     android:clickable="true"
+                    android:focusable="true"
                     android:gravity="center"
                     android:padding="6dp"
                     android:text="@{iyal}"
@@ -102,6 +104,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     android:background="@drawable/yellow_tv_selector"
+                    android:focusable="true"
                     android:clickable="true"
                     android:gravity="center"
                     android:padding="6dp"
@@ -120,6 +123,7 @@
                     android:layout_marginStart="12dp"
                     android:background="@drawable/yellow_tv_selector"
                     android:clickable="true"
+                    android:focusable="true"
                     android:gravity="center"
                     android:padding="6dp"
                     android:text="@{kural}"
@@ -149,10 +153,11 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/cardView"
-            tools:src="@drawable/wellness"
+            tools:src="@drawable/treasure"
             android:scaleType="center"
             app:maxImageSize="45dp"
             app:fabSize="normal"
+            android:contentDescription="@null"
             app:shapeAppearanceOverlay="@style/fab_3_rounded"
             app:tint="@color/primary"/>
 

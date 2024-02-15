@@ -151,7 +151,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 getString(if (it[1]) R.string.unable_to_add else R.string.unable_to_remove)
             }
-            Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -205,7 +205,7 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == NOTIFICATION_REQ_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(
-                    this@MainActivity,
+                    applicationContext,
                     getString(R.string.notification_granted_info),
                     Toast.LENGTH_SHORT
                 ).show()
@@ -291,7 +291,7 @@ class MainActivity : AppCompatActivity() {
     private fun updateSettingsUI(notify: Boolean) {
         viewModel.notificationUpdateUI()
         Toast.makeText(
-            this,
+            applicationContext,
             getString(if (notify) R.string.notification_tuned_on else R.string.notification_tuned_off),
             Toast.LENGTH_SHORT
         ).show()

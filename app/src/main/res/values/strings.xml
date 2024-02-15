@@ -9,7 +9,7 @@
     <string name="settings">அமைப்புகள்</string>
     <string name="thirukural">திருக்குறள்</string>
     <string name="daily_one_kural">இன்றைய குறள்</string>
-    <string name="new_notification_from_kural">திருக்குறளில் இருந்து புதிய அறிவிப்பு...</string>
+    <string name="new_notification_from_kural">திருக்குறளில் இருந்து புதிய அறிவிப்பு…</string>
     <string name="feedback">மின்னஞ்சல் மூலம் கருத்து அனுப்ப</string>
     <string name="rate_us">பிளேஸ்டோரில் செயலியை மதிப்பிட</string>
     <string name="share_app">இந்த செயலியை பகிர</string>
@@ -27,7 +27,7 @@
     <string name="wait">காத்திருக்கவும்</string>
     <string name="arathuppaal_desc">(நல்வழி, ஒழுங்கு, தருமத்தைப்பற்றிக் கூறுவதுமான பகுதி)</string>
     <string name="porutpaal_desc">(இவ்வுலகத்தில் உள்ள பொருட்களைப்பற்றிக் கூறுவதுமான பகுதி)</string>
-    <string name="kamathuppaal_desc">(அன்பு, அறம், பொருள், வீடு என்ற வாழ்வின் நோக்கங்கள் பற்றிய கருத்துக்களை்பற்றிக் கூறுவதுமான பகுதி)</string>
+    <string name="kamathuppaal_desc">(அன்பு, அறம், பொருள், வீடு என்ற வாழ்வின் நோக்கங்கள் பற்றிய கருத்துக்களைக் கூறுவதுமான பகுதி)</string>
 
     <!--Kural Not Found, Please search with valid word or number-->
     <string name="kural_not_found">குறள் கிடைக்கவில்லை, சரியான வார்த்தை அல்லது எண்ணைக் கொண்டு தேடவும்.</string>
@@ -48,7 +48,7 @@
     <string name="permission_required_desc">This app has feature to send daily one kural notification, Please enable notification permission in device settings.</string>
     <string name="go_to_settings">Go To Settings</string>
     <string name="not_now">Not Now</string>
-    <string name="notification_info">This app has feature to send daily one kural notification, Please enable notification permission by clicking ok.</string>
+    <string name="notification_info">This app has feature to send daily one kural notification, Please enable notification permission by clicking OK.</string>
     <string name="notification_granted_info">Permission granted for sending daily one kural notification.</string>
 
     <string name="ad_unit_id">ca-app-pub-8676882032589738/5807664758</string>
